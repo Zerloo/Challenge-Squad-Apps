@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <item
+                android:id="@+id/editMenuItem"
+                android:icon="@drawable/icedit"
+                android:title="@string/editar_dispositivo"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/infoMenuItem"
+                android:icon="@drawable/icdeviceinfo"
+                android:title="@string/informa_es"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/unfavoriteMenuItem"
+                android:icon="@drawable/icunmarkbookmark"
+                android:title="@string/desmarcar_favorito"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/favoriteMenuItem"
+                android:icon="@drawable/icbookmarkbottom"
+                android:title="@string/marcar_favorito"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/deleteMenuItem"
+                android:icon="@drawable/icdelete"
+                android:title="@string/remover_dispositivo"
+                app:showAsAction="ifRoom" />
+</menu>
