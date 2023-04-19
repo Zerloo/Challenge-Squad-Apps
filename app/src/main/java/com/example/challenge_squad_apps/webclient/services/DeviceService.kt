@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.webclient.services
 
 import okhttp3.ResponseBody
 import retrofit2.Response

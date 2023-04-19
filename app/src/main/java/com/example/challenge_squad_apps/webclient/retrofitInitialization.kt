@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.webclient
 
 import com.example.challenge_squad_apps.webclient.services.AlarmDeviceService
 import com.example.challenge_squad_apps.webclient.services.VideoDeviceService

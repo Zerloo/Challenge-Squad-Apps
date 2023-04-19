@@ -1,17 +1,16 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.webclient.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity
-data class VideoDevice(
-    @PrimaryKey
-    val id: String = UUID.randomUUID().toString(),
-    val name: String,
+class VideoDevice(
+    id: String = UUID.randomUUID().toString(),
+    name: String,
     val serial: String,
     val username: String,
-    val password: String,
-    val type: String,
-    val favorite: String,
-)
+    password: String,
+    type: String,
+    favorite: String,
+) : Device(id, name, password, type, favorite)

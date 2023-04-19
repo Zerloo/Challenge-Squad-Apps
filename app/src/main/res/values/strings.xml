@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Challenge-Squad-Apps</string>
+    <string name="kebab_menu" />
+    <string name="editar_dispositivo">Editar dispositivo</string>
+    <string name="informa_es">Informações</string>
+    <string name="desmarcar_favorito">Desmarcar favorito</string>
+    <string name="marcar_favorito">Marcar favorito</string>
+    <string name="remover_dispositivo">Remover dispositivo</string>
 </resources>

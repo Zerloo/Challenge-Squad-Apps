@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.webclient
 
 import com.example.challenge_squad_apps.webclient.models.VideoDevice
 import com.squareup.moshi.Moshi

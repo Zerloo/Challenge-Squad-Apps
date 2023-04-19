@@ -1,9 +1,11 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.dao
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.challenge_squad_apps.webclient.models.AlarmDevice
+import com.example.challenge_squad_apps.webclient.models.VideoDevice
 
 @Database(
     version = 1,
