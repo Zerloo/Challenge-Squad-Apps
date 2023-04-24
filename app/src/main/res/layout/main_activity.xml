@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/gray_bg">
+    android:background="@color/gray_bg"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
 
     <LinearLayout
         android:id="@+id/linearLayoutSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@color/gray_bg"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,13 +26,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_devices"
+            android:closeIcon="@drawable/icclose"
             android:searchIcon="@drawable/icsearch"
             android:textColor="@color/gray_buttons"
             android:textColorHint="@color/gray_buttons"
-            android:closeIcon="@drawable/icclose"
-            app:queryHint="Search">
-        </SearchView>
+            app:queryHint="Search" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -41,21 +40,34 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="16dp"
         android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/device_list_item"/>
+        tools:listitem="@layout/device_list_item" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="@color/gray_buttons"
-        app:itemIconSize="50dp"
-        app:itemIconTint="@color/nav_icons_color"
-        app:itemRippleColor="@color/green_icons"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_menu"/>
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            style="@style/Widget.Material3.BottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/gray_buttons"
+            app:menu="@menu/bottom_menu"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/bottomAppBar"
+            app:srcCompat="@drawable/icfab"
+            android:backgroundTint="@color/gray_bg"
+            android:importantForAccessibility="no" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

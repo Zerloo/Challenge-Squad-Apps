@@ -16,7 +16,7 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.deviceNameTextView)
         val iconImageView: ImageView = itemView.findViewById(R.id.deviceIconImageView)
-        val kebabMenuButton: ImageButton = itemView.findViewById(R.id.deviceKebabImageView)
+        val dropdownMenuButton: ImageButton = itemView.findViewById(R.id.deviceDropdownImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
@@ -27,31 +27,31 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
 
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = deviceList[position]
-        holder.nameTextView.text = device.name
-        holder.kebabMenuButton.setOnClickListener { view ->
-            showKebabMenu(view, device)
-
-            when (device.type) {
-                "Video" -> {
-                    holder.iconImageView.setImageResource(R.drawable.icvideodevicebottom)
-                }
-                "Alarm" -> {
-                    holder.iconImageView.setImageResource(R.drawable.icalarmdevicebottom)
-                }
-                else -> {
-                    holder.iconImageView.setImageResource(R.drawable.icerror)
-                }
+        when (device.type) {
+            "Video" -> {
+                holder.iconImageView.setImageResource(R.drawable.icvideodevicebottom)
             }
 
-        }
+            "Alarm" -> {
+                holder.iconImageView.setImageResource(R.drawable.icalarmdevicebottom)
+            }
 
+            else -> {
+                holder.iconImageView.setImageResource(R.drawable.icerror)
+            }
+        }
+        holder.nameTextView.text = device.name
+        holder.dropdownMenuButton.setOnClickListener { view ->
+            showDropdownMenu(view, device)
+        }
     }
+
     override fun getItemCount(): Int = deviceList.size
 }
 
-private fun showKebabMenu(view: View, device: Device) {
+private fun showDropdownMenu(view: View, device: Device) {
     val popup = PopupMenu(view.context, view)
-    popup.menuInflater.inflate(R.menu.kebab_menu, popup.menu)
+    popup.menuInflater.inflate(R.menu.dropdown_menu, popup.menu)
 
 
     popup.setOnMenuItemClickListener { item ->
@@ -59,18 +59,23 @@ private fun showKebabMenu(view: View, device: Device) {
             R.id.editMenuItem -> {
                 true
             }
+
             R.id.infoMenuItem -> {
                 true
             }
+
             R.id.unfavoriteMenuItem -> {
                 true
             }
+
             R.id.favoriteMenuItem -> {
                 true
             }
+
             R.id.deleteMenuItem -> {
                 true
             }
+
             else -> false
         }
     }

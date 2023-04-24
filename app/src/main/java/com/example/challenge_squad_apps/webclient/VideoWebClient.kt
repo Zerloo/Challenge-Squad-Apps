@@ -10,7 +10,7 @@ class VideoWebClient {
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZlOWFkM2E2LWQyYTUtNDg1MC1iNjNjLTU4YjU5YzI4NWNjNCIsImlhdCI6MTY4MTkwNTMxMywiZXhwIjoxNjg0NDk3MzEzfQ.HqIloqH6XhZxb1QBtHMNZEL1FYBrHuTxnqRO8towmrk"
 
     suspend fun getVideo(): List<VideoDevice> {
-        val response = retrofitInitialization(token).videoDeviceService.videoDeviceService()
+        val response = RetrofitInitialization(token).videoDeviceService.videoDeviceService()
         val devices = mutableListOf<VideoDevice>()
         if (response.isSuccessful) {
             val moshi = Moshi.Builder()
@@ -35,6 +35,7 @@ class VideoWebClient {
         }
         return devices
     }
+
 
     data class ResponseData(val count: Int, val data: List<DeviceJson>)
     data class DeviceJson(

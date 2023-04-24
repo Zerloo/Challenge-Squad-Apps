@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="KebabMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+    <style name="DropdownMenuStyle" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:popupBackground">@drawable/rounded_button_devices</item>
         <item name="android:textColor">@color/gray_icons</item>
         <item name="android:itemBackground">@color/gray_bg</item>
         <item name="android:colorControlNormal">@color/gray_icons</item>
         <item name="android:listDivider">@drawable/menu_divider</item>
+    </style>
+
+    <style name="SaveMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="backgroundTint">@color/green_icons</item>
     </style>
 </resources>

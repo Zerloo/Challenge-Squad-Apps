@@ -18,7 +18,7 @@
             android:id="@+id/deviceNameTextView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_toStartOf="@+id/deviceKebabImageView"
+            android:layout_toStartOf="@+id/deviceDropdownImageView"
             android:layout_toEndOf="@+id/deviceIconImageView"
             android:background="@drawable/rounded_button_devices"
             android:fontFamily="@font/nunito_sans_semibold"
@@ -44,16 +44,16 @@
             app:tint="@color/gray_icons" />
 
         <ImageButton
-            android:id="@+id/deviceKebabImageView"
+            android:id="@+id/deviceDropdownImageView"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="0dp"
             android:background="@drawable/rounded_button_devices"
-            android:contentDescription="@string/kebab_menu"
-            android:popupTheme="@style/KebabMenuStyle"
+            android:contentDescription="@string/dropdownMenu"
+            android:popupTheme="@style/DropdownMenuStyle"
             android:src="@drawable/icoverflow"
-            android:tag="kebabButton"
+            android:tag="dropdownButton"
             app:layout_constraintEnd_toStartOf="@id/deviceNameTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/gray_icons" />

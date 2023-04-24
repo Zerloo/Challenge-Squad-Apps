@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 
-class retrofitInitialization(token: String) {
+class RetrofitInitialization(token: String) {
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor { chain: Interceptor.Chain ->
             val request = chain.request().newBuilder()
@@ -25,7 +25,7 @@ class retrofitInitialization(token: String) {
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://10.100.11.117:3001/")
+        .baseUrl("http://172.23.240.1:3001/")
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()

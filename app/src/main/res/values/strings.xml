@@ -1,9 +1,44 @@
 <resources>
+    <!--App-->
+    <string name="teste">Teste</string>
     <string name="app_name">Challenge-Squad-Apps</string>
-    <string name="kebab_menu" />
-    <string name="editar_dispositivo">Editar dispositivo</string>
-    <string name="informa_es">Informações</string>
-    <string name="desmarcar_favorito">Desmarcar favorito</string>
-    <string name="marcar_favorito">Marcar favorito</string>
-    <string name="remover_dispositivo">Remover dispositivo</string>
+    <string name="salvar">Salvar</string>
+
+    <!--Dropdown-->
+    <string name="dropdownMenu">Dropdown Menu</string>
+    <string name="dropdown_editar_dispositivo">Editar dispositivo</string>
+    <string name="dropdown_desmarcar_favorito">Desmarcar favorito</string>
+    <string name="dropdown_marcar_favorito">Marcar favorito</string>
+    <string name="dropdown_remover_dispositivo">Remover dispositivo</string>
+    <string name="dropdown_informacoes">Informações</string>
+    <!--Informações-->
+    <string name="info_informacoes">Informações</string>
+    <string name="info_tipo">Tipo:</string>
+    <string name="info_numero_de_serie">Número de Série:</string>
+    <string name="info_mac_address">Mac Address:</string>
+    <string name="info_usuario">Usuário:</string>
+
+
+    <!--Add Device-->
+    <string name="add_device_novo_dispositivo">Novo Dispositivo</string>
+    <string name="add_device_helper">Escolha o tipo de dispositivo que deseja adicionar</string>
+    <string name="add_device_tipo_de_dispositivo">Tipo de dispositivo</string>
+    <string name="add_device_nome">Nome</string>
+    <string name="add_device_serial_number">Número de série</string>
+    <string name="add_device_user">Usuário</string>
+    <string name="add_device_password">Senha</string>
+    <string name="add_device_mac_address">MAC Address</string>
+
+    <!--Edit Alarm Device-->
+    <string name="edit_alarm_device_editar_dispositivo">Editar dispositivo</string>
+    <string name="edit_alarm_device_nome">Nome</string>
+    <string name="edit_alarm_device_mac_address">Mac Address</string>
+    <string name="edit_alarm_device_password">Senha</string>
+
+    <!--Edit Video Device-->
+    <string name="edit_video_device_editar_dispositivo">Editar Dispositivo</string>
+    <string name="edit_video_device_password">Senha</string>
+    <string name="edit_video_device_user">Usuário</string>
+    <string name="edit_video_device_serial_number">Número de série</string>
+    <string name="edit_video_device_nome">Nome</string>
 </resources>

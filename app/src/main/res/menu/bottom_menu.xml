@@ -4,22 +4,22 @@
     <item
         android:id="@+id/homeMenuItem"
         android:icon="@drawable/ichomebottom"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title=""/>
     <item
         android:id="@+id/videoDevicesMenuItem"
         android:icon="@drawable/icvideodevicebottom"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title=""/>
     <item
         android:id="@+id/favoriteDevicesMenuItem"
         android:icon="@drawable/icbookmarkbottom"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         
         android:title=""/>
     <item
         android:id="@+id/alarmDevicesMenuItem"
         android:icon="@drawable/icalarmdevicebottom"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title=""/>
 </menu>

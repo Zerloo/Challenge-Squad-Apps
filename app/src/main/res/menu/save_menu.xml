@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:popupTheme="@style/SaveMenuStyle">
+
+    <item
+        android:id="@+id/edit"
+        android:title="@string/salvar"
+        app:showAsAction="always"
+        />
+</menu>

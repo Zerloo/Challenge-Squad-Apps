@@ -1,35 +1,33 @@
 package com.example.challenge_squad_apps
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.example.challenge_squad_apps.webclient.VideoWebClient
-import com.example.challenge_squad_apps.webclient.models.VideoDevice
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.challenge_squad_apps.webclient.WebClient
+import com.example.challenge_squad_apps.webclient.models.Device
+import com.google.android.material.bottomappbar.BottomAppBar
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var deviceList: List<VideoDevice>
+    private lateinit var deviceList: List<Device>
     private lateinit var lifecycleScope: LifecycleCoroutineScope
-    private val webClientVideo by lazy {
-        VideoWebClient()
+    private val webClientAlarm by lazy {
+        WebClient()
     }
 
-
+    //// Test commit command line
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.main_activity)
 
         lifecycleScope = lifecycle.coroutineScope
 
         lifecycleScope.launch {
-            deviceList = webClientVideo.getVideo()
+            deviceList = webClientAlarm.getVideo()
+            deviceList = webClientAlarm.getAlarm()
             configRecyclerView()
         }
     }
@@ -37,14 +35,15 @@ class MainActivity : AppCompatActivity() {
     private fun configRecyclerView(): RecyclerView {
         val deviceListRecyclerView: RecyclerView = findViewById(R.id.deviceListRecyclerView)
         deviceListRecyclerView.adapter = DeviceListAdapter(deviceList)
-        configBottomNavigationView(deviceListRecyclerView)
+        configDeviceListView(deviceListRecyclerView)
         return deviceListRecyclerView
     }
 
-    private fun configBottomNavigationView(deviceListRecyclerView: RecyclerView) {
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
-        bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
+    private fun configDeviceListView(deviceListRecyclerView: RecyclerView) {
+        val bottomAppBarView: BottomAppBar = findViewById(R.id.bottomAppBar)
+        bottomAppBarView.setOnMenuItemClickListener { menuItem ->
+            when (menuItem
+                .itemId) {
                 R.id.homeMenuItem -> {
                     deviceListRecyclerView.adapter = DeviceListAdapter(deviceList)
                     true
