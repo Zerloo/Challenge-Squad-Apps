@@ -1,5 +1,6 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.ui.activities
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,10 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.challenge_squad_apps.webclient.models.Device
+import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.ui.webclient.models.AlarmDevice
+import com.example.challenge_squad_apps.ui.webclient.models.Device
+import com.example.challenge_squad_apps.ui.webclient.models.VideoDevice
 
 class DeviceListAdapter(private val deviceList: List<Device>) :
     RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder>() {
@@ -53,22 +57,37 @@ private fun showDropdownMenu(view: View, device: Device) {
     val popup = PopupMenu(view.context, view)
     popup.menuInflater.inflate(R.menu.dropdown_menu, popup.menu)
 
-
     popup.setOnMenuItemClickListener { item ->
         when (item.itemId) {
             R.id.editMenuItem -> {
+                val intent = Intent(view.context, EditActivity::class.java)
+                intent.putExtra("Type", device.type)
+                view.context.startActivity(intent)
                 true
             }
 
             R.id.infoMenuItem -> {
+                val intent = Intent(view.context, InfoActivity::class.java)
+                intent.putExtra("Type", device.type)
+
+                if (device is AlarmDevice) {
+                    intent.putExtra("Mac Address", device.macAddress)
+                } else if (device is VideoDevice){
+                    intent.putExtra("Serial", device.serial)
+                    intent.putExtra("Username", device.username)
+                }
+
+                view.context.startActivity(intent)
                 true
             }
 
             R.id.unfavoriteMenuItem -> {
+                device.favorite = "false"
                 true
             }
 
             R.id.favoriteMenuItem -> {
+                device.favorite = "true"
                 true
             }
 

@@ -1,6 +1,6 @@
-package com.example.challenge_squad_apps.webclient
+package com.example.challenge_squad_apps.ui.webclient
 
-import com.example.challenge_squad_apps.webclient.models.VideoDevice
+import com.example.challenge_squad_apps.ui.webclient.models.VideoDevice
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 

@@ -1,13 +1,16 @@
-package com.example.challenge_squad_apps
+package com.example.challenge_squad_apps.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import com.example.challenge_squad_apps.webclient.WebClient
-import com.example.challenge_squad_apps.webclient.models.Device
+import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.ui.webclient.WebClient
+import com.example.challenge_squad_apps.ui.webclient.models.Device
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         WebClient()
     }
 
-    //// Test commit command line
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
@@ -29,6 +31,12 @@ class MainActivity : AppCompatActivity() {
             deviceList = webClientAlarm.getVideo()
             deviceList = webClientAlarm.getAlarm()
             configRecyclerView()
+        }
+
+        val fab: FloatingActionButton = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            val intent = Intent(this, AddActivity::class.java)
+            startActivity(intent)
         }
     }
 

@@ -1,7 +1,7 @@
-package com.example.challenge_squad_apps.webclient
+package com.example.challenge_squad_apps.ui.webclient
 
-import com.example.challenge_squad_apps.webclient.services.AlarmDeviceService
-import com.example.challenge_squad_apps.webclient.services.VideoDeviceService
+import com.example.challenge_squad_apps.ui.webclient.services.AlarmDeviceService
+import com.example.challenge_squad_apps.ui.webclient.services.VideoDeviceService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -25,7 +25,7 @@ class RetrofitInitialization(token: String) {
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://172.23.240.1:3001/")
+        .baseUrl("http://10.100.11.143:3001/")
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
