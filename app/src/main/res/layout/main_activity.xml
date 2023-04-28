@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@color/gray_bg"
         android:orientation="vertical"
+        android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +27,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_button_devices"
+            android:background="@drawable/rounded_button"
             android:closeIcon="@drawable/icclose"
             android:searchIcon="@drawable/icsearch"
             android:textColor="@color/gray_buttons"
@@ -40,7 +41,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingTop="16dp"
+        android:paddingTop="10dp"
         android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/device_list_item" />
@@ -57,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:backgroundTint="@color/gray_buttons"
+            android:layout_marginTop="8dp"
             app:menu="@menu/bottom_menu"
             />
 

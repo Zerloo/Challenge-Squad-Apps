@@ -1,13 +1,11 @@
-package com.example.challenge_squad_apps.ui.webclient.models
+package com.example.challenge_squad_apps.webclient.models
 
 import androidx.room.Entity
-import java.util.UUID
-
 
 @Entity
 class AlarmDevice(
     val macAddress: String,
-    id: String = UUID.randomUUID().toString(),
+    id: String,
     name: String,
     password: String,
     type: String,

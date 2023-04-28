@@ -43,10 +43,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <AutoCompleteTextView
+                    android:id="@+id/add_auto_complete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-
                     app:simpleItems="@array/device_types" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -57,12 +57,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_nome"
+                android:visibility="gone"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_device_type">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_add_device_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -74,12 +76,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_serial_number"
+                android:visibility="gone"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_device_name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_add_device_serial_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -91,12 +95,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_mac_address"
+                android:visibility="gone"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_device_serial_number">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_add_device_mac_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -108,12 +114,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_user"
+                android:visibility="gone"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_device_mac_address">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_add_device_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -125,12 +133,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_password"
+                android:visibility="gone"
                 app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_device_user">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_add_device_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />

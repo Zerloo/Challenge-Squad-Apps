@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import com.example.challenge_squad_apps.ui.webclient.models.AlarmDevice
+import com.example.challenge_squad_apps.webclient.models.AlarmDevice
 import kotlinx.coroutines.flow.Flow
 
 
@@ -20,5 +20,4 @@ interface AlarmDeviceDao {
 
     @Query("DELETE FROM AlarmDevice WHERE id = :id")
     suspend fun deleteAlarmDevice(id: String)
-
 }

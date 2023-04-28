@@ -7,8 +7,9 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.challenge_squad_apps.R
-import com.example.challenge_squad_apps.ui.webclient.WebClient
-import com.example.challenge_squad_apps.ui.webclient.models.Device
+import com.example.challenge_squad_apps.ui.DeviceListAdapter
+import com.example.challenge_squad_apps.webclient.WebClient
+import com.example.challenge_squad_apps.webclient.models.Device
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
@@ -17,26 +18,30 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var deviceList: List<Device>
     private lateinit var lifecycleScope: LifecycleCoroutineScope
-    private val webClientAlarm by lazy {
-        WebClient()
-    }
+    private val webClient by lazy { WebClient() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        lifecycleScope = lifecycle.coroutineScope
+        updateView()
+    }
 
-        lifecycleScope.launch {
-            deviceList = webClientAlarm.getVideo()
-            deviceList = webClientAlarm.getAlarm()
-            configRecyclerView()
-        }
-
+    override fun onResume() {
+        super.onResume()
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun updateView() {
+        lifecycleScope = lifecycle.coroutineScope
+        lifecycleScope.launch {
+            deviceList = webClient.getVideo()
+            deviceList = webClient.getAlarm()
+            configRecyclerView()
         }
     }
 
@@ -80,3 +85,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+

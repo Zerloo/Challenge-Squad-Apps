@@ -5,9 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import com.example.challenge_squad_apps.ui.webclient.models.VideoDevice
+import com.example.challenge_squad_apps.webclient.models.VideoDevice
 import kotlinx.coroutines.flow.Flow
-
 
 @Dao
 interface VideoDeviceDao {

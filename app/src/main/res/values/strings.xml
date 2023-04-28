@@ -41,4 +41,7 @@
     <string name="edit_video_device_user">Usuário</string>
     <string name="edit_video_device_serial_number">Número de série</string>
     <string name="edit_video_device_nome">Nome</string>
+    <string name="dialog_remover_dispositivo">Remover dispositivo?</string>
+    <string name="dialog_confirmar">Confirmar</string>
+    <string name="dialog_cancelar">Cancelar</string>
 </resources>

@@ -3,7 +3,7 @@
     android:popupTheme="@style/SaveMenuStyle">
 
     <item
-        android:id="@+id/edit"
+        android:id="@+id/save_menu"
         android:title="@string/salvar"
         app:showAsAction="always"
         />

@@ -1,7 +1,7 @@
-package com.example.challenge_squad_apps.ui.webclient
+package com.example.challenge_squad_apps.webclient
 
-import com.example.challenge_squad_apps.ui.webclient.services.AlarmDeviceService
-import com.example.challenge_squad_apps.ui.webclient.services.VideoDeviceService
+import com.example.challenge_squad_apps.webclient.services.AlarmDeviceService
+import com.example.challenge_squad_apps.webclient.services.VideoDeviceService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -32,5 +32,4 @@ class RetrofitInitialization(token: String) {
 
     val videoDeviceService: VideoDeviceService = retrofit.create(VideoDeviceService::class.java)
     val alarmDeviceService: AlarmDeviceService = retrofit.create(AlarmDeviceService::class.java)
-
 }

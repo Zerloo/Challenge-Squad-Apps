@@ -1,14 +1,13 @@
-package com.example.challenge_squad_apps.ui.webclient.models
+package com.example.challenge_squad_apps.webclient.models
 
 import androidx.room.Entity
-import java.util.UUID
 
 @Entity
 class VideoDevice(
-    id: String = UUID.randomUUID().toString(),
+    id: String,
     name: String,
-    val serial: String,
-    val username: String,
+    var serial: String,
+    var username: String,
     password: String,
     type: String,
     favorite: String,

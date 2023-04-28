@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.activities
+package com.example.challenge_squad_apps.ui
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -10,9 +10,16 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.challenge_squad_apps.R
-import com.example.challenge_squad_apps.ui.webclient.models.AlarmDevice
-import com.example.challenge_squad_apps.ui.webclient.models.Device
-import com.example.challenge_squad_apps.ui.webclient.models.VideoDevice
+import com.example.challenge_squad_apps.ui.activities.EditActivity
+import com.example.challenge_squad_apps.ui.activities.InfoActivity
+import com.example.challenge_squad_apps.webclient.DeleteDevice
+import com.example.challenge_squad_apps.webclient.models.AlarmDevice
+import com.example.challenge_squad_apps.webclient.models.Device
+import com.example.challenge_squad_apps.webclient.models.Dialog
+import com.example.challenge_squad_apps.webclient.models.VideoDevice
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class DeviceListAdapter(private val deviceList: List<Device>) :
     RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder>() {
@@ -56,12 +63,21 @@ class DeviceListAdapter(private val deviceList: List<Device>) :
 private fun showDropdownMenu(view: View, device: Device) {
     val popup = PopupMenu(view.context, view)
     popup.menuInflater.inflate(R.menu.dropdown_menu, popup.menu)
+    configureDropdownMenu(popup, view, device)
+    popup.show()
+}
 
+private fun configureDropdownMenu(
+    popup: PopupMenu,
+    view: View,
+    device: Device
+) {
     popup.setOnMenuItemClickListener { item ->
         when (item.itemId) {
             R.id.editMenuItem -> {
                 val intent = Intent(view.context, EditActivity::class.java)
                 intent.putExtra("Type", device.type)
+                intent.putExtra("id", device.id)
                 view.context.startActivity(intent)
                 true
             }
@@ -72,7 +88,7 @@ private fun showDropdownMenu(view: View, device: Device) {
 
                 if (device is AlarmDevice) {
                     intent.putExtra("Mac Address", device.macAddress)
-                } else if (device is VideoDevice){
+                } else if (device is VideoDevice) {
                     intent.putExtra("Serial", device.serial)
                     intent.putExtra("Username", device.username)
                 }
@@ -92,11 +108,39 @@ private fun showDropdownMenu(view: View, device: Device) {
             }
 
             R.id.deleteMenuItem -> {
+                deleteDropdownMenuDialog(view, device)
                 true
             }
 
             else -> false
         }
     }
-    popup.show()
 }
+
+private fun deleteDropdownMenuDialog(
+    view: View,
+    device: Device
+) {
+    val deleteDialog = Dialog()
+    deleteDialog.showDialog(
+        view.context,
+        "Remover dispositivo?",
+        "Você tem certeza que deseja remover este dispositivo?",
+        "Confirmar",
+        "Cancelar",
+        positiveAction = {
+            val deleteDevice = DeleteDevice()
+            GlobalScope.launch(Dispatchers.IO) {
+
+                if (device is AlarmDevice) {
+                    deleteDevice.deleteDeviceAlarm(device.id)
+                } else if (device is VideoDevice) {
+                    deleteDevice.deleteDeviceVideo(device.id)
+                }
+            }
+        },
+        negativeAction = {}
+    )
+}
+
+
