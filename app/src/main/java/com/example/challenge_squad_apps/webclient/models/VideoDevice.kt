@@ -1,14 +1,15 @@
 package com.example.challenge_squad_apps.webclient.models
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity
-class VideoDevice(
-    id: String,
-    name: String,
+data class VideoDevice(
+    @PrimaryKey
+    override val id: String,
+    override var name: String,
     var serial: String,
     var username: String,
-    password: String,
-    type: String,
-    favorite: String,
-) : Device(id, name, password, type, favorite)
+    override var password: String,
+    override var type: String,
+) : Device(id, name, password, type)

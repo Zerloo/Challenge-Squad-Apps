@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.webclient.WebClient
 import com.google.android.material.appbar.MaterialToolbar
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 class AddActivity : AppCompatActivity() {
 
     private lateinit var topAppBar: MaterialToolbar
-    var globalDeviceType = ""
+    private var globalDeviceType = ""
     private val webClient by lazy {
         WebClient()
     }
@@ -34,36 +35,41 @@ class AddActivity : AppCompatActivity() {
         super.onResume()
 
         readDeviceTypeInput()
-        saveActivity()
+        saveDevice()
         returnActivity()
     }
 
-    private fun saveActivity() {
+    private fun saveDevice() {
         this.topAppBar.setOnMenuItemClickListener { menuItem ->
+            menuItem.itemId
             when (menuItem.itemId) {
                 R.id.save_menu -> {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        val newName = findViewById<TextView>(R.id.input_add_device_name).text.toString()
-                        var newSerialNumber: String? = findViewById<TextView>(R.id.input_add_device_serial_number).text.toString()
-                        var newUser: String? = findViewById<TextView>(R.id.input_add_device_user).text.toString()
-                        var newMacAddress: String? = findViewById<TextView>(R.id.input_add_device_mac_address).text.toString()
-                        val newPassword = findViewById<TextView>(R.id.input_add_device_password).text.toString()
 
-                        when (globalDeviceType) {
-                            ("Alarme") -> {
-                                newSerialNumber = null
-                                newUser = null
+                    val newName = findViewById<TextView>(R.id.input_add_device_name).text.toString()
+                    var newSerialNumber: String? = findViewById<TextView>(R.id.input_add_device_serial_number).text.toString()
+                    var newUser: String? = findViewById<TextView>(R.id.input_add_device_user).text.toString()
+                    var newMacAddress: String? = findViewById<TextView>(R.id.input_add_device_mac_address).text.toString()
+                    val newPassword = findViewById<TextView>(R.id.input_add_device_password).text.toString()
+
+                    when (globalDeviceType) {
+                        ("Alarme") -> {
+                            newSerialNumber = null
+                            newUser = null
+                            GlobalScope.launch(Dispatchers.IO) {
                                 webClient.addDevice(newName, newSerialNumber, newUser, newMacAddress, newPassword, globalDeviceType)
                             }
+                        }
 
-                            ("Video") -> {
-                                newMacAddress = null
+                        ("Vídeo") -> {
+                            newMacAddress = null
+                            lifecycleScope.launch(Dispatchers.IO) {
                                 webClient.addDevice(newName, newSerialNumber, newUser, newMacAddress, newPassword, globalDeviceType)
                             }
                         }
                     }
                     true
                 }
+
                 else -> {
                     false
                 }

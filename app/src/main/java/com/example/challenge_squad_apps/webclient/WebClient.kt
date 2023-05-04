@@ -3,7 +3,6 @@ package com.example.challenge_squad_apps.webclient
 import com.example.challenge_squad_apps.webclient.models.AddDevice
 import com.example.challenge_squad_apps.webclient.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.models.AlarmDeviceJson
-import com.example.challenge_squad_apps.webclient.models.Device
 import com.example.challenge_squad_apps.webclient.models.EditDevice
 import com.example.challenge_squad_apps.webclient.models.VideoDevice
 import com.example.challenge_squad_apps.webclient.models.VideoDeviceJson
@@ -15,10 +14,10 @@ import retrofit2.Response
 class WebClient {
     private val token: String =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZlOWFkM2E2LWQyYTUtNDg1MC1iNjNjLTU4YjU5YzI4NWNjNCIsImlhdCI6MTY4MTkwNTMxMywiZXhwIjoxNjg0NDk3MzEzfQ.HqIloqH6XhZxb1QBtHMNZEL1FYBrHuTxnqRO8towmrk"
-    private val devices = mutableListOf<Device>()
 
-    suspend fun getAlarm(): List<Device> {
+    suspend fun getAlarm(): MutableList<AlarmDevice> {
         val response = RetrofitInitialization(token).alarmDeviceService.alarmDeviceService()
+        val devices: MutableList<AlarmDevice> = mutableListOf()
         if (response.isSuccessful) {
             val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
@@ -33,7 +32,7 @@ class WebClient {
                         type = "Alarm",
                         macAddress = deviceJson.macAddress,
                         password = deviceJson.password,
-                        favorite = "false",
+                        favorite = false,
 
                         )
                     devices.add(device)
@@ -43,8 +42,9 @@ class WebClient {
         return devices
     }
 
-    suspend fun getVideo(): List<Device> {
+    suspend fun getVideo(): MutableList<VideoDevice> {
         val response = RetrofitInitialization(token).videoDeviceService.videoDeviceService()
+        val devices: MutableList<VideoDevice> = mutableListOf()
         if (response.isSuccessful) {
             val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
@@ -60,7 +60,7 @@ class WebClient {
                         serial = deviceJson.serial,
                         username = deviceJson.username,
                         password = deviceJson.password,
-                        favorite = "false",
+                        favorite = false,
                     )
                     devices.add(device)
                 }
@@ -69,7 +69,7 @@ class WebClient {
         return devices
     }
 
-    suspend fun getByIdVideo(id: String): VideoDevice {
+    suspend fun getVideoById(id: String): VideoDevice {
         val response = RetrofitInitialization(token).videoDeviceService.byIdVideoDeviceService(id)
         lateinit var device: VideoDevice
 
@@ -92,23 +92,21 @@ class WebClient {
                     serial = it.serial,
                     username = it.username,
                     password = it.password,
-                    favorite = "false",
+                    favorite = false,
                 )
-                devices.add(device)
             }
         }
         return device
     }
 
     suspend fun deleteAlarm(id: String): Boolean {
-
         val response = RetrofitInitialization(token).alarmDeviceService.deleteAlarmDeviceService(id)
-        return responseStatus (response)
+        return responseStatus(response)
     }
 
     suspend fun deleteVideo(id: String): Boolean {
         val response = RetrofitInitialization(token).videoDeviceService.deleteVideoDeviceService(id)
-        return responseStatus (response)
+        return responseStatus(response)
     }
 
     suspend fun editVideo(id: String, newDeviceName: String, newDeviceUsername: String, newDevicePassword: String): Boolean {
@@ -120,7 +118,7 @@ class WebClient {
         )
 
         val response = RetrofitInitialization(token).videoDeviceService.patchVideoDevice(id = id, device = editedDevice)
-        return responseStatus (response)
+        return responseStatus(response)
     }
 
     suspend fun editAlarm(id: String, newDeviceName: String, newDevicePassword: String): Boolean {
@@ -131,7 +129,7 @@ class WebClient {
         )
 
         val response = RetrofitInitialization(token).alarmDeviceService.patchAlarmDevice(id = id, device = editedDevice)
-        return responseStatus (response)
+        return responseStatus(response)
     }
 
     suspend fun addDevice(newName: String, newSerialNumber: String?, newUser: String?, newMacAddress: String?, newPassword: String, deviceType: String): Boolean {
@@ -151,7 +149,7 @@ class WebClient {
             response = RetrofitInitialization(token).alarmDeviceService.postAlarmDevice(device = createdDevice)
         }
 
-        return responseStatus (response)
+        return responseStatus(response)
     }
 
     data class VideoResponseData(val count: Int, val data: List<VideoDeviceJson>)

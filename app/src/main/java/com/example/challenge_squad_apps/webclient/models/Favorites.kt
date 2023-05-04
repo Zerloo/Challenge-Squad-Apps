@@ -4,10 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-open class Device(
+data class Favorites(
     @PrimaryKey
-    open val id: String,
-    open var name: String,
-    open var password: String,
-    open val type: String,
+    val id: String,
 )

@@ -13,6 +13,7 @@ import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.webclient.WebClient
 import com.example.challenge_squad_apps.webclient.models.Dialog
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -61,6 +62,7 @@ class EditActivity : AppCompatActivity() {
                                 val newDeviceUsername = findViewById<TextView>(R.id.input_edit_video_device_user).text.toString()
                                 val newDevicePassword = findViewById<TextView>(R.id.input_edit_video_device_password).text.toString()
                                 val returnBackend = webClient.editVideo(deviceID.toString(), newDeviceName, newDeviceUsername, newDevicePassword)
+
                                 ContextCompat.getMainExecutor(this@EditActivity).execute {
                                     confirmationDialog(returnBackend, this@EditActivity)
                                 }
@@ -79,15 +81,18 @@ class EditActivity : AppCompatActivity() {
 
     private fun setEditView() {
         val extras = intent.extras
+        val  rastreability= extras?.getString("rastreability")
         when (extras?.getString("Type")) {
 
             ("Alarm") -> {
                 setContentView(R.layout.edit_alarm_device)
+                findViewById<TextInputEditText>(R.id.input_edit_alarm_device_mac_address).setText(rastreability)
                 this.topAppBar = findViewById(R.id.edit_alarm_device_topAppBar)
             }
 
             ("Video") -> {
                 setContentView(R.layout.edit_video_device)
+                findViewById<TextInputEditText>(R.id.input_edit_video_device_serial_number).setText(rastreability)
                 this.topAppBar = findViewById(R.id.edit_video_device_topAppBar)
             }
 
@@ -102,9 +107,8 @@ class EditActivity : AppCompatActivity() {
 
     private fun confirmationDialog(returnBackend: Boolean, context: Context) {
         val confirmationDialog = Dialog()
-        lateinit var message: String
 
-        message = if (returnBackend) {
+        val message: String = if (returnBackend) {
             "Dispositivo editado com sucesso"
         } else {
             "Falha ao atualizar informações do dispositivo"

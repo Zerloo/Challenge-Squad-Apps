@@ -1,20 +1,18 @@
-package com.example.challenge_squad_apps.dao
+package com.example.challenge_squad_apps.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.challenge_squad_apps.webclient.models.AlarmDevice
-import com.example.challenge_squad_apps.webclient.models.VideoDevice
+import com.example.challenge_squad_apps.dao.FavoritesDao
+import com.example.challenge_squad_apps.webclient.models.Favorites
 
 @Database(
     version = 1,
-    entities = [VideoDevice::class, AlarmDevice::class]
+    entities = [Favorites::class]
 )
-
 abstract class AppDataBase : RoomDatabase() {
-    abstract fun videoDeviceDao() : VideoDeviceDao
-    abstract fun alarmDeviceDao() : AlarmDeviceDao
+    abstract fun favoritesDeviceDao(): FavoritesDao
 
     companion object {
         @Volatile
@@ -25,7 +23,8 @@ abstract class AppDataBase : RoomDatabase() {
                 context,
                 AppDataBase::class.java,
                 "challenge.db"
-            ).build()
+            ).allowMainThreadQueries()
+                .build()
         }
     }
 }

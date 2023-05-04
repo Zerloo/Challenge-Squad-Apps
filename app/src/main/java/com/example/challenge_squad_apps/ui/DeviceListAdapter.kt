@@ -1,5 +1,6 @@
 package com.example.challenge_squad_apps.ui
 
+import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +11,20 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.database.AppDataBase
 import com.example.challenge_squad_apps.ui.activities.EditActivity
 import com.example.challenge_squad_apps.ui.activities.InfoActivity
 import com.example.challenge_squad_apps.webclient.DeleteDevice
 import com.example.challenge_squad_apps.webclient.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.models.Device
 import com.example.challenge_squad_apps.webclient.models.Dialog
+import com.example.challenge_squad_apps.webclient.models.Favorites
 import com.example.challenge_squad_apps.webclient.models.VideoDevice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class DeviceListAdapter(private val deviceList: List<Device>) :
+class DeviceListAdapter(var deviceList: MutableList<Device>) :
     RecyclerView.Adapter<DeviceListAdapter.DeviceViewHolder>() {
 
     class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -70,7 +73,7 @@ private fun showDropdownMenu(view: View, device: Device) {
 private fun configureDropdownMenu(
     popup: PopupMenu,
     view: View,
-    device: Device
+    device: Device,
 ) {
     popup.setOnMenuItemClickListener { item ->
         when (item.itemId) {
@@ -78,6 +81,13 @@ private fun configureDropdownMenu(
                 val intent = Intent(view.context, EditActivity::class.java)
                 intent.putExtra("Type", device.type)
                 intent.putExtra("id", device.id)
+                if (device is VideoDevice)
+                {
+                    intent.putExtra("rastreability", device.serial)
+                } else if (device is AlarmDevice){
+                    intent.putExtra("rastreability", device.macAddress)
+                }
+
                 view.context.startActivity(intent)
                 true
             }
@@ -98,12 +108,13 @@ private fun configureDropdownMenu(
             }
 
             R.id.unfavoriteMenuItem -> {
-                device.favorite = "false"
+//                device.favorite = false
                 true
             }
 
             R.id.favoriteMenuItem -> {
-                device.favorite = "true"
+//                device.favorite = true
+                database.favoritesDeviceDao().saveFavoriteDevice(Favorites(device.id))
                 true
             }
 
@@ -134,6 +145,7 @@ private fun deleteDropdownMenuDialog(
 
                 if (device is AlarmDevice) {
                     deleteDevice.deleteDeviceAlarm(device.id)
+
                 } else if (device is VideoDevice) {
                     deleteDevice.deleteDeviceVideo(device.id)
                 }

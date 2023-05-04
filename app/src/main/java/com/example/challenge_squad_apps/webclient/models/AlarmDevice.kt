@@ -1,14 +1,15 @@
 package com.example.challenge_squad_apps.webclient.models
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity
-class AlarmDevice(
+data class AlarmDevice(
+    @PrimaryKey
+    override val id: String,
     val macAddress: String,
-    id: String,
-    name: String,
-    password: String,
-    type: String,
-    favorite: String,
-) : Device(id, name, password, type, favorite)
+    override var name: String,
+    override var password: String,
+    override val type: String,
+) : Device(id, name, password, type)
 

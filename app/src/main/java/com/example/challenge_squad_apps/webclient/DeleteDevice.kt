@@ -5,12 +5,12 @@ class DeleteDevice {
         WebClient()
     }
 
-    suspend fun deleteDeviceAlarm(deviceID: String) {
-        webClient.deleteAlarm(deviceID)
+    suspend fun deleteDeviceAlarm(deviceID: String): Boolean {
+        return webClient.deleteAlarm(deviceID)
     }
 
-    suspend fun deleteDeviceVideo(deviceID: String) {
-        webClient.deleteVideo(deviceID)
+    suspend fun deleteDeviceVideo(deviceID: String): Boolean {
+        return webClient.deleteVideo(deviceID)
     }
 }
 
