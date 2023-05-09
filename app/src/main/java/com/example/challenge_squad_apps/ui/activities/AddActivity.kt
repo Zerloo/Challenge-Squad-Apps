@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.databinding.AddDeviceBinding
+import com.example.challenge_squad_apps.databinding.MainActivityBinding
 import com.example.challenge_squad_apps.webclient.WebClient
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.textfield.TextInputLayout
@@ -18,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class AddActivity : AppCompatActivity() {
 
-    private lateinit var topAppBar: MaterialToolbar
+    private lateinit var binding: AddDeviceBinding
     private var globalDeviceType = ""
     private val webClient by lazy {
         WebClient()
@@ -26,30 +28,28 @@ class AddActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.add_device)
-        topAppBar = findViewById(R.id.add_device_topAppBar)
+        binding = AddDeviceBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onResume() {
         super.onResume()
-
         readDeviceTypeInput()
         saveDevice()
         returnActivity()
     }
 
     private fun saveDevice() {
-        this.topAppBar.setOnMenuItemClickListener { menuItem ->
+        binding.addDeviceTopAppBar.setOnMenuItemClickListener { menuItem ->
             menuItem.itemId
             when (menuItem.itemId) {
                 R.id.save_menu -> {
 
-                    val newName = findViewById<TextView>(R.id.input_add_device_name).text.toString()
-                    var newSerialNumber: String? = findViewById<TextView>(R.id.input_add_device_serial_number).text.toString()
-                    var newUser: String? = findViewById<TextView>(R.id.input_add_device_user).text.toString()
-                    var newMacAddress: String? = findViewById<TextView>(R.id.input_add_device_mac_address).text.toString()
-                    val newPassword = findViewById<TextView>(R.id.input_add_device_password).text.toString()
+                    val newName = binding.inputAddDeviceName.text.toString()
+                    var newSerialNumber: String? = binding.inputAddDeviceSerialNumber.text.toString()
+                    var newUser: String? = binding.inputAddDeviceUser.text.toString()
+                    var newMacAddress: String? = binding.inputAddDeviceMacAddress.text.toString()
+                    val newPassword = binding.inputAddDevicePassword.text.toString()
 
                     when (globalDeviceType) {
                         ("Alarme") -> {
@@ -78,54 +78,46 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun returnActivity() {
-        topAppBar.setNavigationOnClickListener {
+        binding.addDeviceTopAppBar.setNavigationOnClickListener {
             finish()
         }
     }
 
     private fun changeLayoutVisibility() {
 
-        val name = findViewById<TextInputLayout>(R.id.add_device_name)
-        val serialNumber = findViewById<TextInputLayout>(R.id.add_device_serial_number)
-        val user = findViewById<TextInputLayout>(R.id.add_device_user)
-        val macAddress = findViewById<TextInputLayout>(R.id.add_device_mac_address)
-        val password = findViewById<TextInputLayout>(R.id.add_device_password)
-
         when (globalDeviceType) {
             ("Alarme") -> {
-                user.visibility = View.GONE
-                serialNumber.visibility = View.GONE
-                macAddress.visibility = View.VISIBLE
-                password.visibility = View.VISIBLE
-                name.visibility = View.VISIBLE
+                binding.addDeviceUser.visibility = View.GONE
+                binding.addDeviceSerialNumber.visibility = View.GONE
+                binding.addDeviceMacAddress.visibility = View.VISIBLE
+                binding.addDevicePassword.visibility = View.VISIBLE
+                binding.addDeviceName.visibility = View.VISIBLE
             }
 
             ("Vídeo") -> {
-                user.visibility = View.VISIBLE
-                serialNumber.visibility = View.VISIBLE
-                macAddress.visibility = View.GONE
-                password.visibility = View.VISIBLE
-                name.visibility = View.VISIBLE
+                binding.addDeviceUser.visibility = View.VISIBLE
+                binding.addDeviceSerialNumber.visibility = View.VISIBLE
+                binding.addDeviceMacAddress.visibility = View.GONE
+                binding.addDevicePassword.visibility = View.VISIBLE
+                binding.addDeviceName.visibility = View.VISIBLE
             }
 
             ("") -> {
-                user.visibility = View.GONE
-                serialNumber.visibility = View.GONE
-                macAddress.visibility = View.GONE
-                password.visibility = View.VISIBLE
-                name.visibility = View.VISIBLE
+                binding.addDeviceUser.visibility = View.GONE
+                binding.addDeviceSerialNumber.visibility = View.GONE
+                binding.addDeviceMacAddress.visibility = View.GONE
+                binding.addDevicePassword.visibility = View.VISIBLE
+                binding.addDeviceName.visibility = View.VISIBLE
             }
         }
-
-
     }
 
     private fun readDeviceTypeInput() {
 
-        val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.add_auto_complete)
         val deviceTypesArray = resources.getStringArray(R.array.device_types)
-        autoCompleteTextView.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, deviceTypesArray))
-        autoCompleteTextView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+
+        binding.addAutoComplete.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, deviceTypesArray))
+        binding.addAutoComplete.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             globalDeviceType = parent.getItemAtPosition(position) as String
             changeLayoutVisibility()
         }

@@ -87,12 +87,15 @@ class EditActivity : AppCompatActivity() {
             ("Alarm") -> {
                 setContentView(R.layout.edit_alarm_device)
                 findViewById<TextInputEditText>(R.id.input_edit_alarm_device_mac_address).setText(rastreability)
+                findViewById<TextInputEditText>(R.id.input_edit_alarm_device_mac_address).isEnabled=false
                 this.topAppBar = findViewById(R.id.edit_alarm_device_topAppBar)
+
             }
 
             ("Video") -> {
                 setContentView(R.layout.edit_video_device)
                 findViewById<TextInputEditText>(R.id.input_edit_video_device_serial_number).setText(rastreability)
+                findViewById<TextInputEditText>(R.id.input_edit_video_device_serial_number).isEnabled=false
                 this.topAppBar = findViewById(R.id.edit_video_device_topAppBar)
             }
 

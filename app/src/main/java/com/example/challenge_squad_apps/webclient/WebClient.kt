@@ -32,7 +32,7 @@ class WebClient {
                         type = "Alarm",
                         macAddress = deviceJson.macAddress,
                         password = deviceJson.password,
-                        favorite = false,
+//                        favorite = false,
 
                         )
                     devices.add(device)
@@ -60,7 +60,7 @@ class WebClient {
                         serial = deviceJson.serial,
                         username = deviceJson.username,
                         password = deviceJson.password,
-                        favorite = false,
+//                        favorite = false,
                     )
                     devices.add(device)
                 }
@@ -92,7 +92,6 @@ class WebClient {
                     serial = it.serial,
                     username = it.username,
                     password = it.password,
-                    favorite = false,
                 )
             }
         }

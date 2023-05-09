@@ -8,23 +8,23 @@ import com.example.challenge_squad_apps.dao.FavoritesDao
 import com.example.challenge_squad_apps.webclient.models.Favorites
 
 @Database(
-    version = 1,
-    entities = [Favorites::class]
+    entities = [Favorites::class],
+    version = 1
 )
+
 abstract class AppDataBase : RoomDatabase() {
     abstract fun favoritesDeviceDao(): FavoritesDao
-
     companion object {
         @Volatile
-        private var db: AppDataBase? = null
-
-        fun instancia(context: Context): AppDataBase {
-            return db ?: Room.databaseBuilder(
+        private var dataBase: AppDataBase? = null
+        fun instance(context: Context): AppDataBase {
+            return dataBase ?: Room.databaseBuilder(
                 context,
                 AppDataBase::class.java,
-                "challenge.db"
+                "challenge-db"
             ).allowMainThreadQueries()
                 .build()
+
         }
     }
 }
