@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuList
 
     @SuppressLint("NotifyDataSetChanged")
     private fun configDeviceListView() {
+        
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem
                 .itemId) {
