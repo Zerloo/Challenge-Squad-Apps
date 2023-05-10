@@ -17,8 +17,9 @@ class DeleteDevice {
     fun deleteDropdownMenuDialog(
         context: Context,
         device: Device,
-    ) {
+    ): Boolean {
         val deleteDialog = Dialog()
+        var choose: Boolean = true
         deleteDialog.showDialog(
             context,
             "Remover dispositivo?",
@@ -34,9 +35,13 @@ class DeleteDevice {
                         deleteDeviceVideo(device.id)
                     }
                 }
+                choose = true
             },
-            negativeAction = {}
+            negativeAction = {
+                choose = false
+            }
         )
+        return choose
     }
 
     suspend fun deleteDeviceAlarm(deviceID: String): Boolean {

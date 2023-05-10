@@ -144,7 +144,7 @@ class WebClient {
 
         if (deviceType == "Vídeo") {
             response = RetrofitInitialization(token).videoDeviceService.postVideoDevice(device = createdDevice)
-        } else if (deviceType == "Alarm") {
+        } else if (deviceType == "Alarme") {
             response = RetrofitInitialization(token).alarmDeviceService.postAlarmDevice(device = createdDevice)
         }
 

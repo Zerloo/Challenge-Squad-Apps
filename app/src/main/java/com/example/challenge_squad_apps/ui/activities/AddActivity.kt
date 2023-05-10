@@ -1,21 +1,18 @@
 package com.example.challenge_squad_apps.ui.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.AddDeviceBinding
-import com.example.challenge_squad_apps.databinding.MainActivityBinding
 import com.example.challenge_squad_apps.webclient.WebClient
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.textfield.TextInputLayout
+import com.example.challenge_squad_apps.webclient.models.Dialog
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class AddActivity : AppCompatActivity() {
@@ -55,15 +52,21 @@ class AddActivity : AppCompatActivity() {
                         ("Alarme") -> {
                             newSerialNumber = null
                             newUser = null
-                            GlobalScope.launch(Dispatchers.IO) {
-                                webClient.addDevice(newName, newSerialNumber, newUser, newMacAddress, newPassword, globalDeviceType)
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val returnBackend = webClient.addDevice(newName, newSerialNumber, newUser, newMacAddress, newPassword, globalDeviceType)
+                                ContextCompat.getMainExecutor(this@AddActivity).execute {
+                                    confirmationDialog(returnBackend, this@AddActivity)
+                                }
                             }
                         }
 
                         ("Vídeo") -> {
                             newMacAddress = null
                             lifecycleScope.launch(Dispatchers.IO) {
-                                webClient.addDevice(newName, newSerialNumber, newUser, newMacAddress, newPassword, globalDeviceType)
+                                val returnBackend = webClient.addDevice(newName, newSerialNumber, newUser, newMacAddress, newPassword, globalDeviceType)
+                                ContextCompat.getMainExecutor(this@AddActivity).execute {
+                                    confirmationDialog(returnBackend, this@AddActivity)
+                                }
                             }
                         }
                     }
@@ -122,6 +125,29 @@ class AddActivity : AppCompatActivity() {
             changeLayoutVisibility()
         }
     }
+
+    private fun confirmationDialog(returnBackend: Boolean, context: Context) {
+        val confirmationDialog = Dialog()
+
+        val message: String = if (returnBackend) {
+            "Dispositivo cadastrado com sucesso"
+        } else {
+            "Falha ao cadastrar informações do dispositivo"
+        }
+
+        confirmationDialog.showDialog(
+            context,
+            "",
+            message,
+            "Ok",
+            negativeMessage = "",
+            positiveAction = {
+                finish()
+            },
+            negativeAction = {}
+        )
+    }
 }
+
 
 

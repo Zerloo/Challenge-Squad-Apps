@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="50dp">
 
         <TextView
             android:id="@+id/deviceNameTextView"
@@ -20,6 +20,8 @@
             android:layout_height="40dp"
             android:layout_toStartOf="@+id/deviceDropdownImageView"
             android:layout_toEndOf="@+id/deviceIconImageView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/rounded_button_devices"
             android:fontFamily="@font/nunito_sans_semibold"
             android:gravity="start|center"
@@ -36,11 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="0dp"
             android:background="@drawable/rounded_button_devices"
+            android:gravity="start|center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/deviceNameTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/icalarmdevicebottom"
+            app:srcCompat="@drawable/icvideodevicebottom"
             app:tint="@color/gray_icons" />
 
         <ImageButton
@@ -48,10 +54,11 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_marginEnd="0dp"
             android:background="@drawable/rounded_button_devices"
             android:contentDescription="@string/dropdownMenu"
-            android:popupTheme="@style/DropdownMenuStyle"
             android:src="@drawable/icoverflow"
             android:tag="dropdownButton"
             app:layout_constraintEnd_toStartOf="@id/deviceNameTextView"

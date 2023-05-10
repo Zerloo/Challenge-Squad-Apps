@@ -9,14 +9,14 @@ import com.example.challenge_squad_apps.databinding.DeviceListItemBinding
 import com.example.challenge_squad_apps.webclient.models.Device
 
 
-class RecyclerViewAdapter (private val listener: RecyclerViewListener) : ListAdapter<Device, RecyclerViewViewHolder>(RecyclerViewAdapter) {
+class RecyclerViewAdapter(private val listener: RecyclerViewListener) : ListAdapter<Device, RecyclerViewViewHolder>(RecyclerViewAdapter) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewViewHolder{
-        val binding = DeviceListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewViewHolder {
+        val binding = DeviceListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecyclerViewViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecyclerViewViewHolder, position: Int){
+    override fun onBindViewHolder(holder: RecyclerViewViewHolder, position: Int) {
         holder.bind(getItem(position), listener)
     }
 

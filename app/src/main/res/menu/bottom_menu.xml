@@ -6,27 +6,22 @@
         android:id="@+id/homeMenuItem"
         android:icon="@drawable/ichomebottom"
         android:title=""
-        app:iconTint="@color/selector_menu_icon_tint"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/favoriteDevicesMenuItem"
         android:icon="@drawable/icbookmarkbottom"
         android:title=""
-        app:iconTint="@color/selector_menu_icon_tint"
-
         app:showAsAction="always" />
     <item
         android:id="@+id/videoDevicesMenuItem"
         android:icon="@drawable/icvideodevicebottom"
         android:title=""
-        app:iconTint="@color/selector_menu_icon_tint"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
     <item
         android:id="@+id/alarmDevicesMenuItem"
         android:icon="@drawable/icalarmdevicebottom"
         android:title=""
-        app:iconTint="@color/selector_menu_icon_tint"
         app:showAsAction="always" />
 </menu>

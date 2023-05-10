@@ -9,32 +9,42 @@
     tools:context=".ui.activities.MainActivity">
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayoutSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:background="@color/gray_bg"
         android:orientation="vertical"
-        android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.SearchView
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchView"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_button"
-            android:closeIcon="@drawable/icclose"
-            android:searchIcon="@drawable/icsearch"
-            android:textColor="@color/gray_buttons"
-            android:textColorHint="@color/gray_buttons"
-            app:queryHint="Search" />
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIconDrawable="@drawable/icsearch">
 
-    </LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fill_searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:fontFamily="@font/nunito_sans_semibold"
+                android:textColor="@color/gray_icons"
+                android:textSize="12sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/deviceListRecyclerView"
@@ -42,11 +52,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/device_list_item" />
-
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -58,19 +67,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:backgroundTint="@color/gray_buttons"
             android:layout_marginTop="8dp"
-            app:menu="@menu/bottom_menu"
-            />
+            android:backgroundTint="@color/gray_buttons"
+            app:itemIconSize="50dp"
+            app:menu="@menu/bottom_menu" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_anchor="@id/bottomAppBar"
-            app:srcCompat="@drawable/icfab"
             android:backgroundTint="@color/gray_bg"
-            android:importantForAccessibility="no" />
+            android:importantForAccessibility="no"
+            app:layout_anchor="@id/bottomAppBar"
+            app:srcCompat="@drawable/icfab" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

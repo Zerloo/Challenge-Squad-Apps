@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.databinding.EditAlarmDeviceBinding
+import com.example.challenge_squad_apps.databinding.EditVideoDeviceBinding
+import com.example.challenge_squad_apps.databinding.MainActivityBinding
 import com.example.challenge_squad_apps.webclient.WebClient
 import com.example.challenge_squad_apps.webclient.models.Dialog
 import com.google.android.material.appbar.MaterialToolbar
@@ -20,13 +23,18 @@ import kotlinx.coroutines.launch
 
 class EditActivity : AppCompatActivity() {
 
+    private lateinit var bindingVideo: EditVideoDeviceBinding
+    private lateinit var bindingAlarm: EditAlarmDeviceBinding
+
     private lateinit var topAppBar: MaterialToolbar
-    private val webClient by lazy {
-        WebClient()
-    }
+    private val webClient by lazy { WebClient() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        bindingAlarm = EditAlarmDeviceBinding.inflate(layoutInflater)
+        bindingVideo = EditVideoDeviceBinding.inflate(layoutInflater)
+
         setEditView()
     }
 
@@ -48,8 +56,8 @@ class EditActivity : AppCompatActivity() {
                     GlobalScope.launch(Dispatchers.IO) {
                         when (deviceType) {
                             ("Alarm") -> {
-                                val newDeviceName = findViewById<TextView>(R.id.input_edit_alarm_device_name).text.toString()
-                                val newDevicePassword = findViewById<TextView>(R.id.input_edit_alarm_device_password).text.toString()
+                                val newDeviceName = bindingAlarm.inputEditAlarmDeviceName.text.toString()
+                                val newDevicePassword = bindingAlarm.inputEditAlarmDevicePassword.text.toString()
                                 val returnBackend = webClient.editAlarm(deviceID.toString(), newDeviceName, newDevicePassword)
 
                                 ContextCompat.getMainExecutor(this@EditActivity).execute {
@@ -58,9 +66,9 @@ class EditActivity : AppCompatActivity() {
                             }
 
                             ("Video") -> {
-                                val newDeviceName = findViewById<TextView>(R.id.input_edit_video_device_name).text.toString()
-                                val newDeviceUsername = findViewById<TextView>(R.id.input_edit_video_device_user).text.toString()
-                                val newDevicePassword = findViewById<TextView>(R.id.input_edit_video_device_password).text.toString()
+                                val newDeviceName = bindingVideo.inputEditVideoDeviceName.text.toString()
+                                val newDeviceUsername = bindingVideo.inputEditVideoDeviceUser.text.toString()
+                                val newDevicePassword = bindingVideo.inputEditVideoDevicePassword.text.toString()
                                 val returnBackend = webClient.editVideo(deviceID.toString(), newDeviceName, newDeviceUsername, newDevicePassword)
 
                                 ContextCompat.getMainExecutor(this@EditActivity).execute {
@@ -81,22 +89,21 @@ class EditActivity : AppCompatActivity() {
 
     private fun setEditView() {
         val extras = intent.extras
-        val  rastreability= extras?.getString("rastreability")
+        val rastreability = extras?.getString("rastreability")
         when (extras?.getString("Type")) {
 
             ("Alarm") -> {
-                setContentView(R.layout.edit_alarm_device)
-                findViewById<TextInputEditText>(R.id.input_edit_alarm_device_mac_address).setText(rastreability)
-                findViewById<TextInputEditText>(R.id.input_edit_alarm_device_mac_address).isEnabled=false
-                this.topAppBar = findViewById(R.id.edit_alarm_device_topAppBar)
-
+                setContentView(bindingAlarm.root)
+                bindingAlarm.inputEditAlarmDeviceMacAddress.setText(rastreability)
+                bindingAlarm.inputEditAlarmDeviceMacAddress.isEnabled = false
+                this.topAppBar = bindingAlarm.editAlarmDeviceTopAppBar
             }
 
             ("Video") -> {
-                setContentView(R.layout.edit_video_device)
-                findViewById<TextInputEditText>(R.id.input_edit_video_device_serial_number).setText(rastreability)
-                findViewById<TextInputEditText>(R.id.input_edit_video_device_serial_number).isEnabled=false
-                this.topAppBar = findViewById(R.id.edit_video_device_topAppBar)
+                setContentView(bindingVideo.root)
+                bindingVideo.inputEditVideoDeviceSerialNumber.setText(rastreability)
+                bindingVideo.inputEditVideoDeviceSerialNumber.isEnabled = false
+                this.topAppBar = bindingVideo.editVideoDeviceTopAppBar
             }
 
         }

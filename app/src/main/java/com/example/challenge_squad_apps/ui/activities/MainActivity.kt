@@ -3,17 +3,19 @@ package com.example.challenge_squad_apps.ui.activities
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.MenuCompat
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.dao.FavoritesDao
 import com.example.challenge_squad_apps.database.AppDataBase
 import com.example.challenge_squad_apps.databinding.MainActivityBinding
-import com.example.challenge_squad_apps.ui.DropdownMenuListener
 import com.example.challenge_squad_apps.ui.RecyclerViewAdapter
 import com.example.challenge_squad_apps.ui.RecyclerViewListener
 import com.example.challenge_squad_apps.webclient.DeleteDevice
@@ -27,40 +29,49 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuListener {
+class MainActivity : AppCompatActivity(), RecyclerViewListener {
 
     private val webClient by lazy { WebClient() }
 
+    private var deviceList: MutableList<Device> = mutableListOf()
     private lateinit var binding: MainActivityBinding
     private lateinit var dataBase: AppDataBase
-    private lateinit var deviceList: MutableList<Device>
     private lateinit var favoritesDao: FavoritesDao
     private lateinit var lifecycleScope: LifecycleCoroutineScope
-
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         dataBase = AppDataBase.instance(applicationContext)
         favoritesDao = dataBase.favoritesDeviceDao()
 
+
+        configureSearchBar()
         configureFab()
-        setupView()
+
+        lifecycleScope = lifecycle.coroutineScope
+        lifecycleScope.launch { setupView() }
     }
 
-    private fun setupView() {
+    private suspend fun setupView() {
         lifecycleScope = lifecycle.coroutineScope
+        lifecycleScope.launch {
+            updateList()
+            setupRecyclerView()
+            configDeviceListView()
+        }.join()
+    }
+
+    private suspend fun updateList() {
+        if (deviceList.isNotEmpty()) deviceList.removeAll(deviceList)
         lifecycleScope.launch {
             val videoDeviceList = webClient.getVideo()
             val alarmDeviceList = webClient.getAlarm()
-            deviceList = videoDeviceList.toMutableList()
+            deviceList.addAll(videoDeviceList)
             deviceList.addAll(alarmDeviceList)
-            setupRecyclerView()
-            configDeviceListView()
-        }
+        }.join()
     }
 
     private fun configureFab() {
@@ -77,6 +88,38 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuList
         }
     }
 
+    private fun configureSearchBar() {
+        binding.fillSearchView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                var deviceFiltered: MutableList<Device> = mutableListOf()
+
+                    deviceFiltered = if (s.isEmpty()) {
+                    deviceList
+                } else ({
+                    deviceList.filter { device ->
+                        when (device) {
+                            is AlarmDevice -> device.name.contains(s, ignoreCase = true)
+                            is VideoDevice -> device.name.contains(s, ignoreCase = true)
+                            else -> false
+                        }
+                    }
+                }as MutableList<Device>)
+
+                recyclerViewAdapter.submitList(deviceFiltered)
+                recyclerViewAdapter.notifyDataSetChanged()
+            }
+
+            override fun afterTextChanged(s: Editable) {
+            }
+        })
+    }
+
+
     private fun setupRecyclerView() {
         recyclerViewAdapter = RecyclerViewAdapter(this)
         recyclerViewAdapter.submitList(deviceList)
@@ -86,7 +129,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuList
 
     @SuppressLint("NotifyDataSetChanged")
     private fun configDeviceListView() {
-        
+
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem
                 .itemId) {
@@ -132,11 +175,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuList
                 if (device.id == favorite.id) devicesFavoriteList.add(device)
             }
         }
-
         return devicesFavoriteList
     }
 
-    override fun onMenuItemPressed(popup: PopupMenu, device: Device) {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun onMenuItemPressed(popup: PopupMenu, device: Device) {
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.editMenuItem -> {
@@ -182,7 +225,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuList
 
                 R.id.deleteMenuItem -> {
                     val deleteDevice = DeleteDevice()
-                    deleteDevice.deleteDropdownMenuDialog(this, device)
+
+                    if (deleteDevice.deleteDropdownMenuDialog(this, device)) {
+                        lifecycleScope.launch {
+                            updateList()
+                            recyclerViewAdapter.submitList(deviceList)
+                            recyclerViewAdapter.notifyDataSetChanged()
+                        }
+                    }
                     true
                 }
 
@@ -193,9 +243,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DropdownMenuList
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onDropdownPressed(view: View, device: Device) {
         val popup = PopupMenu(this, view)
+
         popup.menuInflater.inflate(R.menu.dropdown_menu, popup.menu)
+        MenuCompat.setGroupDividerEnabled(popup.menu, true)
+        popup.setForceShowIcon(true)
 
         if (favoritesDao.haveFavoriteDevice(device.id)) {
             popup.menu.findItem(R.id.favoriteMenuItem).isVisible = false
