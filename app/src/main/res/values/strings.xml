@@ -3,6 +3,7 @@
     <string name="teste">Teste</string>
     <string name="app_name">Challenge-Squad-Apps</string>
     <string name="salvar">Salvar</string>
+    <string name="empty" />
 
     <!--Dropdown-->
     <string name="dropdownMenu">Dropdown Menu</string>
@@ -11,6 +12,7 @@
     <string name="dropdown_marcar_favorito">Marcar favorito</string>
     <string name="dropdown_remover_dispositivo">Remover dispositivo</string>
     <string name="dropdown_informacoes">Informações</string>
+
     <!--Informações-->
     <string name="info_informacoes">Informações</string>
     <string name="info_tipo">Tipo:</string>
@@ -29,19 +31,25 @@
     <string name="add_device_password">Senha</string>
     <string name="add_device_mac_address">MAC Address</string>
 
-    <!--Edit Alarm Device-->
-    <string name="edit_alarm_device_editar_dispositivo">Editar dispositivo</string>
-    <string name="edit_alarm_device_nome">Nome</string>
-    <string name="edit_alarm_device_mac_address">Mac Address</string>
-    <string name="edit_alarm_device_password">Senha</string>
 
     <!--Edit Video Device-->
-    <string name="edit_video_device_editar_dispositivo">Editar Dispositivo</string>
-    <string name="edit_video_device_password">Senha</string>
-    <string name="edit_video_device_user">Usuário</string>
-    <string name="edit_video_device_serial_number">Número de série</string>
-    <string name="edit_video_device_nome">Nome</string>
-    <string name="dialog_remover_dispositivo">Remover dispositivo?</string>
+    <string name="edit_device_editar_dispositivo">Editar Dispositivo</string>
+    <string name="edit_device_password">Senha</string>
+    <string name="edit_device_user">Usuário</string>
+    <string name="edit_device_serial_number">Número de série</string>
+    <string name="edit_device_nome">Nome</string>
+    <string name="edit_device_mac_address">Mac Address</string>
+
+
+    <!--    Dialog-->
     <string name="dialog_confirmar">Confirmar</string>
     <string name="dialog_cancelar">Cancelar</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_dispositivo_editado_com_sucesso">Dispositivo editado com sucesso</string>
+    <string name="dialog_falha_ao_atualizar_informacoes_do_dispositivo">Falha ao atualizar informações do dispositivo</string>
+    <string name="dialog_remover_dispositivo">Remover dispositivo?</string>
+    <string name="dialog_voce_tem_certeza_que_deseja_remover_este_dispositivo">Você tem certeza que deseja remover este dispositivo?</string>
+    <string name="dialog_dispositivo_cadastrado_com_sucesso">Dispositivo cadastrado com sucesso</string>
+    <string name="dialog_falha_ao_cadastrar_informacoes_do_dispositivo">Falha ao cadastrar informações do dispositivo</string>
+
 </resources>

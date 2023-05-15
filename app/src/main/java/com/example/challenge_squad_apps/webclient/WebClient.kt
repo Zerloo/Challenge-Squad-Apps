@@ -1,11 +1,11 @@
 package com.example.challenge_squad_apps.webclient
 
-import com.example.challenge_squad_apps.webclient.models.AddDevice
-import com.example.challenge_squad_apps.webclient.models.AlarmDevice
-import com.example.challenge_squad_apps.webclient.models.AlarmDeviceJson
-import com.example.challenge_squad_apps.webclient.models.EditDevice
-import com.example.challenge_squad_apps.webclient.models.VideoDevice
-import com.example.challenge_squad_apps.webclient.models.VideoDeviceJson
+import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
+import com.example.challenge_squad_apps.webclient.dto.models.Device
+import com.example.challenge_squad_apps.webclient.dto.models.EditDevice
+import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
+import com.example.challenge_squad_apps.webclient.dto.models.pokos.AlarmResponseData
+import com.example.challenge_squad_apps.webclient.dto.models.pokos.VideoResponseData
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.ResponseBody
@@ -32,7 +32,6 @@ class WebClient {
                         type = "Alarm",
                         macAddress = deviceJson.macAddress,
                         password = deviceJson.password,
-//                        favorite = false,
 
                         )
                     devices.add(device)
@@ -60,42 +59,12 @@ class WebClient {
                         serial = deviceJson.serial,
                         username = deviceJson.username,
                         password = deviceJson.password,
-//                        favorite = false,
                     )
                     devices.add(device)
                 }
             }
         }
         return devices
-    }
-
-    suspend fun getVideoById(id: String): VideoDevice {
-        val response = RetrofitInitialization(token).videoDeviceService.byIdVideoDeviceService(id)
-        lateinit var device: VideoDevice
-
-        if (response.isSuccessful) {
-
-            val moshi = Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
-                .build()
-            val adapter = moshi.adapter(VideoDeviceJson::class.java)
-
-            val responseData = response.body()?.string().let {
-                adapter.fromJson(it)
-            }
-
-            responseData?.let {
-                device = VideoDevice(
-                    id = it.id,
-                    name = it.name,
-                    type = "Video",
-                    serial = it.serial,
-                    username = it.username,
-                    password = it.password,
-                )
-            }
-        }
-        return device
     }
 
     suspend fun deleteAlarm(id: String): Boolean {
@@ -108,7 +77,7 @@ class WebClient {
         return responseStatus(response)
     }
 
-    suspend fun editVideo(id: String, newDeviceName: String, newDeviceUsername: String, newDevicePassword: String): Boolean {
+    suspend fun editVideo(id: String, newDeviceName: String?, newDeviceUsername: String?, newDevicePassword: String?): Boolean {
 
         val editedDevice = EditDevice(
             name = newDeviceName,
@@ -120,7 +89,7 @@ class WebClient {
         return responseStatus(response)
     }
 
-    suspend fun editAlarm(id: String, newDeviceName: String, newDevicePassword: String): Boolean {
+    suspend fun editAlarm(id: String, newDeviceName: String?, newDevicePassword: String?): Boolean {
         val editedDevice = EditDevice(
             name = newDeviceName,
             password = newDevicePassword,
@@ -131,29 +100,17 @@ class WebClient {
         return responseStatus(response)
     }
 
-    suspend fun addDevice(newName: String, newSerialNumber: String?, newUser: String?, newMacAddress: String?, newPassword: String, deviceType: String): Boolean {
+    suspend fun addDevice(device: Device): Boolean {
         lateinit var response: Response<ResponseBody>
 
-        val createdDevice = AddDevice(
-            name = newName,
-            serial = newSerialNumber,
-            username = newUser,
-            macAddress = newMacAddress,
-            password = newPassword
-        )
-
-        if (deviceType == "Vídeo") {
-            response = RetrofitInitialization(token).videoDeviceService.postVideoDevice(device = createdDevice)
-        } else if (deviceType == "Alarme") {
-            response = RetrofitInitialization(token).alarmDeviceService.postAlarmDevice(device = createdDevice)
+        if (device is VideoDevice) {
+            response = RetrofitInitialization(token).videoDeviceService.postVideoDevice(device)
+        } else if (device is AlarmDevice) {
+            response = RetrofitInitialization(token).alarmDeviceService.postAlarmDevice(device)
         }
 
         return responseStatus(response)
     }
-
-    data class VideoResponseData(val count: Int, val data: List<VideoDeviceJson>)
-
-    data class AlarmResponseData(val count: Int, val data: List<AlarmDeviceJson>)
 
     private fun responseStatus(response: Response<ResponseBody>): Boolean {
         return response.isSuccessful

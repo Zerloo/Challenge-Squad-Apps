@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.webclient.models
+package com.example.challenge_squad_apps.webclient.dto.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 data class AlarmDevice(
     @PrimaryKey
     override val id: String,
-    val macAddress: String,
     override var name: String,
+    val macAddress: String?,
     override var password: String,
-    override val type: String,
+    override val type: String?,
 ) : Device(id, name, password, type)
 

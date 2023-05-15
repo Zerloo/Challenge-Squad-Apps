@@ -8,13 +8,13 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/edit_video_device_topAppBar"
+            android:id="@+id/edit_device_topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray_bg"
             app:menu="@menu/save_menu"
             app:navigationIcon="@drawable/icclose"
-            app:title="@string/edit_video_device_editar_dispositivo" />
+            app:title="@string/edit_device_editar_dispositivo" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -31,73 +31,91 @@
             android:layout_marginTop="32dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/edit_video_device_name"
+                android:id="@+id/edit_device_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/edit_video_device_nome"
+                android:hint="@string/edit_device_nome"
                 app:endIconMode="clear_text"
+                app:layout_constraintBottom_toTopOf="@id/edit_device_serial_number"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/edit_video_device_serial_number">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_edit_video_device_name"
+                    android:id="@+id/input_edit_device_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/edit_video_device_serial_number"
+                android:id="@+id/edit_device_serial_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/edit_video_device_serial_number"
+                android:hint="@string/edit_device_serial_number"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_video_device_name">
+                app:layout_constraintTop_toBottomOf="@id/edit_device_name">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_edit_video_device_serial_number"
-                    android:maxLength="13"
+                    android:id="@+id/input_edit_device_serial_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="13" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_device_mac_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/edit_device_mac_address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_device_serial_number">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_device_mac_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="12" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_device_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/edit_device_user"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_device_mac_address">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_edit_device_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/edit_video_device_user"
+                android:id="@+id/edit_device_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/edit_video_device_user"
-                app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_video_device_serial_number">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_edit_video_device_user"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/edit_video_device_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/edit_video_device_password"
+                android:hint="@string/edit_device_password"
                 app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_video_device_user">
+                app:layout_constraintTop_toBottomOf="@id/edit_device_user">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_edit_video_device_password"
+                    android:id="@+id/input_edit_device_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />

@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.challenge_squad_apps.dao.FavoritesDao
-import com.example.challenge_squad_apps.webclient.models.Favorites
+import com.example.challenge_squad_apps.database.dao.FavoritesDao
+import com.example.challenge_squad_apps.webclient.dto.models.Favorites
 
 @Database(
     entities = [Favorites::class],

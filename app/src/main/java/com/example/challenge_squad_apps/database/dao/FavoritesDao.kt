@@ -1,10 +1,10 @@
-package com.example.challenge_squad_apps.dao
+package com.example.challenge_squad_apps.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.challenge_squad_apps.webclient.models.Favorites
+import com.example.challenge_squad_apps.webclient.dto.models.Favorites
 
 @Dao
 interface FavoritesDao {

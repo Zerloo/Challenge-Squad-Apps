@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui
+package com.example.challenge_squad_apps.ui.recyclerview
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.challenge_squad_apps.databinding.DeviceListItemBinding
-import com.example.challenge_squad_apps.webclient.models.Device
+import com.example.challenge_squad_apps.webclient.dto.models.Device
 
 
 class RecyclerViewAdapter(private val listener: RecyclerViewListener) : ListAdapter<Device, RecyclerViewViewHolder>(RecyclerViewAdapter) {

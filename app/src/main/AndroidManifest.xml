@@ -24,9 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.EditActivity" />
-        <activity android:name=".ui.activities.InfoActivity" />
-        <activity android:name=".ui.activities.AddActivity" />
+        <activity android:name=".ui.activities.EditDeviceActivity" />
+        <activity android:name=".ui.activities.InfoDeviceActivity" />
+        <activity android:name=".ui.activities.AddDeviceActivity" />
     </application>
 
 </manifest>

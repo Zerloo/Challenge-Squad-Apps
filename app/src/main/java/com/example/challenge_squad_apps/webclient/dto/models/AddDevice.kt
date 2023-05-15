@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.webclient.models
+package com.example.challenge_squad_apps.webclient.dto.models
 
 import com.squareup.moshi.JsonClass
 

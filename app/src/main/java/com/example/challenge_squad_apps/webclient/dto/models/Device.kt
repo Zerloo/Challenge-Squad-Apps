@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.webclient.models
+package com.example.challenge_squad_apps.webclient.dto.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,5 +9,5 @@ open class Device(
     open val id: String,
     open var name: String,
     open var password: String,
-    open val type: String,
+    open val type: String?,
 )

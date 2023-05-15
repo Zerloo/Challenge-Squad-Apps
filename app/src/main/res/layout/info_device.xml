@@ -9,7 +9,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/info_video_devcice_topAppBar"
+            android:id="@+id/info_device_topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray_bg"
@@ -30,14 +30,15 @@
             android:layout_marginTop="22dp">
 
             <LinearLayout
-                android:id="@+id/linearLayoutType"
+                android:id="@+id/info_linearLayout_type"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:layout_constraintBottom_toTopOf="@id/linearLayoutNS"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/info_linearLayout_serial_number"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:id="@+id/info_video_devcice_type"
+                    android:id="@+id/info_device_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="19dp"
@@ -48,7 +49,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/fill_info_video_devcice_type"
+                    android:id="@+id/fill_info_devcice_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
@@ -58,14 +59,15 @@
 
 
             <LinearLayout
-                android:id="@+id/linearLayoutNS"
+                android:id="@+id/info_linearLayout_serial_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:layout_constraintBottom_toTopOf="@id/linearLayoutUser"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_linearLayout_type"
+                app:layout_constraintBottom_toTopOf="@id/info_linearLayout_user">
 
                 <TextView
-                    android:id="@+id/info_video_device_serial_number"
+                    android:id="@+id/info_device_serial_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="19dp"
@@ -77,7 +79,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/fill_info_video_device_serial_number"
+                    android:id="@+id/fill_info_device_serial_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
@@ -86,14 +88,15 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayoutUser"
+                android:id="@+id/info_linearLayout_user"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_linearLayout_serial_number"
+                app:layout_constraintBottom_toTopOf="@id/info_linearLayout_mac"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:id="@+id/info_video_device_user"
+                    android:id="@+id/info_device_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="19dp"
@@ -105,12 +108,41 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/fill_info_video_device_user"
+                    android:id="@+id/fill_info_device_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/info_usuario" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/info_linearLayout_mac"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/info_linearLayout_user"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/info_device_mac"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="19dp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/nunito_sans_semibold"
+                    android:text="@string/info_mac_address"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/fill_info_device_mac"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/info_mac_address" />
             </LinearLayout>
 
 
