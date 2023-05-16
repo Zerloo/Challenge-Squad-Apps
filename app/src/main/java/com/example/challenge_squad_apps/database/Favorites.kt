@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.webclient.dto.models
+package com.example.challenge_squad_apps.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

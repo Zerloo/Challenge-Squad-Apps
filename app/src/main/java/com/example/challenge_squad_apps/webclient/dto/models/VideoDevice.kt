@@ -11,5 +11,4 @@ data class VideoDevice(
     var serial: String?,
     var username: String?,
     override var password: String,
-    override var type: String?,
-) : Device(id, name, password, type)
+) : Device(id, name, password)

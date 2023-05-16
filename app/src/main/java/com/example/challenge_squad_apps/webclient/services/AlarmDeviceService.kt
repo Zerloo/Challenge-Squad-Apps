@@ -1,5 +1,6 @@
 package com.example.challenge_squad_apps.webclient.services
 
+import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.EditDevice
 import okhttp3.ResponseBody
@@ -24,7 +25,7 @@ interface AlarmDeviceService {
 
     @POST("alarm-centrals")
     suspend fun postAlarmDevice(
-        @Body device: Device
+        @Body device: AlarmDevice
     ): Response<ResponseBody>
 
     @DELETE("alarm-centrals/{id}")

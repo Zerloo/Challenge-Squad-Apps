@@ -1,20 +1,23 @@
 package com.example.challenge_squad_apps.ui.utils.dialogs
 
 import android.app.Dialog
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.databinding.DialogtestBinding
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
 class DeleteDeviceDialog(private val device: Device) : AppCompatDialogFragment() {
 
-//    private lateinit var binding:
     private val listener: DeleteDeviceDialogListener by lazy {
         activity as DeleteDeviceDialogListener
     }
+
     companion object {
         const val TAG = "DeleteDeviceDialog"
         fun newInstance(device: Device) = DeleteDeviceDialog(device)
@@ -25,12 +28,13 @@ class DeleteDeviceDialog(private val device: Device) : AppCompatDialogFragment()
             isCancelable = false
 
             MaterialAlertDialogBuilder(activity)
-                .setTitle(R.string.dialog_voce_tem_certeza_que_deseja_remover_este_dispositivo)
+                .setTitle(R.string.dialog_remover_dispositivo)
+                .setMessage(R.string.dialog_voce_tem_certeza_que_deseja_remover_este_dispositivo)
                 .setPositiveButton(R.string.dialog_confirmar) { _, _ ->
                     lifecycleScope.launch {
                         listener.confirmButtonClicked(device)
+                        dismiss()
                     }
-                    dismiss()
                 }
                 .setNegativeButton(R.string.dialog_cancelar) { _, _ ->
                     dismiss()
@@ -40,6 +44,6 @@ class DeleteDeviceDialog(private val device: Device) : AppCompatDialogFragment()
     }
 
     interface DeleteDeviceDialogListener {
-        suspend fun confirmButtonClicked(device: Device): Boolean
+        suspend fun confirmButtonClicked(device: Device)
     }
 }

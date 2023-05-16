@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.challenge_squad_apps.webclient.dto.models.Favorites
+import com.example.challenge_squad_apps.database.Favorites
 
 @Dao
 interface FavoritesDao {

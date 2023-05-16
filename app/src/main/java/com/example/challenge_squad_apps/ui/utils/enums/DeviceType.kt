@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.webclient.dto.models
+package com.example.challenge_squad_apps.ui.utils.enums
 
 
 enum class DeviceType(val type: String?) {

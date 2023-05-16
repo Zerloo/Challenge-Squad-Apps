@@ -3,24 +3,25 @@ package com.example.challenge_squad_apps.ui.activities
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.EditDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.EditDeviceDialog
-import com.example.challenge_squad_apps.webclient.WebClient
-import com.example.challenge_squad_apps.webclient.dto.models.DeviceType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
+import com.example.challenge_squad_apps.ui.view_models.EditDeviceViewModel
 import kotlinx.coroutines.launch
 
-class EditDeviceActivity : AppCompatActivity() {
+class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialogListener {
 
     private lateinit var binding: EditDeviceBinding
-    private val webClient by lazy { WebClient() }
+    private lateinit var editViewModel: EditDeviceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = EditDeviceBinding.inflate(layoutInflater)
+        editViewModel = ViewModelProvider(this)[EditDeviceViewModel::class.java]
         setContentView(binding.root)
 
         setupView()
@@ -28,46 +29,33 @@ class EditDeviceActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
         onBackButtonPressed()
-        saveActivity()
+        saveChanges()
     }
 
 
-    private fun saveActivity() {
+    private fun saveChanges() {
         with(binding) {
-
-            val extras = intent.extras
-            val deviceType = extras?.getString("Type")
-            val deviceID = extras?.getString("id")
-
-            val newDeviceName: String? = inputEditDeviceName.text.toString()
-            val newDeviceUsername: String? = inputEditDeviceUser.text.toString()
-            val newDevicePassword: String? = inputEditDevicePassword.text.toString()
-
             editDeviceTopAppBar.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.save_menu -> {
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            when (deviceType) {
-                                (DeviceType.ALARM.type) -> {
-                                    val returnBackend = webClient.editAlarm(deviceID.toString(), newDeviceName, newDevicePassword)
-                                    EditDeviceDialog.newInstance(returnBackend)
-                                }
+                if (menuItem.itemId == R.id.save_menu) {
 
-                                (DeviceType.VIDEO.type) -> {
-                                    val returnBackend = webClient.editVideo(deviceID.toString(), newDeviceName, newDeviceUsername, newDevicePassword)
-                                    EditDeviceDialog.newInstance(returnBackend)
-                                }
-                            }
-                        }
-                        true
+                    val extras = intent.extras
+                    val deviceId = extras?.getString("id")
+                    val deviceType = extras?.getString("Type")
+                    val newDeviceName: String? = inputEditDeviceName.text.toString()
+                    val newDeviceUsername: String? = inputEditDeviceUser.text.toString()
+                    val newDevicePassword: String? = inputEditDevicePassword.text.toString()
+
+                    lifecycleScope.launch {
+                        val returnBackend = editViewModel.saveDeviceChanges(deviceId, deviceType, newDeviceName, newDeviceUsername, newDevicePassword)
+                        val dialog = EditDeviceDialog.newInstance(returnBackend)
+                        dialog.show(supportFragmentManager, EditDeviceDialog.TAG)
                     }
-
-                    else -> false
+                    true
+                } else {
+                    false
                 }
             }
-
         }
     }
 
@@ -76,7 +64,7 @@ class EditDeviceActivity : AppCompatActivity() {
         with(binding) {
 
             val extras = intent.extras
-            val rastreability = extras?.getString("rastreability")
+            val rastreability = extras?.getString("Rastreability")
 
             when (extras?.getString("Type")) {
                 (DeviceType.ALARM.type) -> {
@@ -96,8 +84,12 @@ class EditDeviceActivity : AppCompatActivity() {
     }
 
     private fun onBackButtonPressed() {
-        binding.editDeviceTopAppBar.setNavigationOnClickListener() {
+        binding.editDeviceTopAppBar.setNavigationOnClickListener {
             finish()
         }
+    }
+
+    override fun confirmButtonClicked() {
+        this@EditDeviceActivity.finish()
     }
 }

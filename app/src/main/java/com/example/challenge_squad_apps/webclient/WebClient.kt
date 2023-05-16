@@ -12,11 +12,9 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 class WebClient {
-    private val token: String =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZlOWFkM2E2LWQyYTUtNDg1MC1iNjNjLTU4YjU5YzI4NWNjNCIsImlhdCI6MTY4MTkwNTMxMywiZXhwIjoxNjg0NDk3MzEzfQ.HqIloqH6XhZxb1QBtHMNZEL1FYBrHuTxnqRO8towmrk"
 
     suspend fun getAlarm(): MutableList<AlarmDevice> {
-        val response = RetrofitInitialization(token).alarmDeviceService.alarmDeviceService()
+        val response = RetrofitInitialization(Constants.token).alarmDeviceService.alarmDeviceService()
         val devices: MutableList<AlarmDevice> = mutableListOf()
         if (response.isSuccessful) {
             val moshi = Moshi.Builder()
@@ -29,7 +27,6 @@ class WebClient {
                     val device = AlarmDevice(
                         id = deviceJson.id,
                         name = deviceJson.name,
-                        type = "Alarm",
                         macAddress = deviceJson.macAddress,
                         password = deviceJson.password,
 
@@ -42,7 +39,7 @@ class WebClient {
     }
 
     suspend fun getVideo(): MutableList<VideoDevice> {
-        val response = RetrofitInitialization(token).videoDeviceService.videoDeviceService()
+        val response = RetrofitInitialization(Constants.token).videoDeviceService.videoDeviceService()
         val devices: MutableList<VideoDevice> = mutableListOf()
         if (response.isSuccessful) {
             val moshi = Moshi.Builder()
@@ -55,7 +52,6 @@ class WebClient {
                     val device = VideoDevice(
                         id = deviceJson.id,
                         name = deviceJson.name,
-                        type = "Video",
                         serial = deviceJson.serial,
                         username = deviceJson.username,
                         password = deviceJson.password,
@@ -68,12 +64,12 @@ class WebClient {
     }
 
     suspend fun deleteAlarm(id: String): Boolean {
-        val response = RetrofitInitialization(token).alarmDeviceService.deleteAlarmDeviceService(id)
+        val response = RetrofitInitialization(Constants.token).alarmDeviceService.deleteAlarmDeviceService(id)
         return responseStatus(response)
     }
 
     suspend fun deleteVideo(id: String): Boolean {
-        val response = RetrofitInitialization(token).videoDeviceService.deleteVideoDeviceService(id)
+        val response = RetrofitInitialization(Constants.token).videoDeviceService.deleteVideoDeviceService(id)
         return responseStatus(response)
     }
 
@@ -85,7 +81,7 @@ class WebClient {
             password = newDevicePassword,
         )
 
-        val response = RetrofitInitialization(token).videoDeviceService.patchVideoDevice(id = id, device = editedDevice)
+        val response = RetrofitInitialization(Constants.token).videoDeviceService.patchVideoDevice(id = id, device = editedDevice)
         return responseStatus(response)
     }
 
@@ -96,7 +92,7 @@ class WebClient {
             username = null,
         )
 
-        val response = RetrofitInitialization(token).alarmDeviceService.patchAlarmDevice(id = id, device = editedDevice)
+        val response = RetrofitInitialization(Constants.token).alarmDeviceService.patchAlarmDevice(id = id, device = editedDevice)
         return responseStatus(response)
     }
 
@@ -104,9 +100,9 @@ class WebClient {
         lateinit var response: Response<ResponseBody>
 
         if (device is VideoDevice) {
-            response = RetrofitInitialization(token).videoDeviceService.postVideoDevice(device)
+            response = RetrofitInitialization(Constants.token).videoDeviceService.postVideoDevice(device)
         } else if (device is AlarmDevice) {
-            response = RetrofitInitialization(token).alarmDeviceService.postAlarmDevice(device)
+            response = RetrofitInitialization(Constants.token).alarmDeviceService.postAlarmDevice(device)
         }
 
         return responseStatus(response)

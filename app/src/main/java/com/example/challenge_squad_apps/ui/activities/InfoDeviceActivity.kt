@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.challenge_squad_apps.databinding.InfoDeviceBinding
-import com.example.challenge_squad_apps.webclient.dto.models.DeviceType
+import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
 
 class InfoDeviceActivity : AppCompatActivity() {
 
@@ -37,7 +37,7 @@ class InfoDeviceActivity : AppCompatActivity() {
                 hideVideoInfo()
             }
             else if (deviceType == DeviceType.VIDEO.type){
-                infoDeviceType.text = DeviceType.VÍDEO.type
+                fillInfoDevciceType.text = DeviceType.VÍDEO.type
                 fillInfoDeviceSerialNumber.text = extras!!.getString("Serial")
                 fillInfoDeviceUser.text = extras.getString("Username")
                 hideAlarmInfo()

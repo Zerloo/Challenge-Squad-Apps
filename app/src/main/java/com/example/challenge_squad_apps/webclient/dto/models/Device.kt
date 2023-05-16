@@ -4,10 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-open class Device(
+abstract class Device(
     @PrimaryKey
     open val id: String,
     open var name: String,
     open var password: String,
-    open val type: String?,
 )

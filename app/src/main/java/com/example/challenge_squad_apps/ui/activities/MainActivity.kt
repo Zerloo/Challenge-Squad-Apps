@@ -11,71 +11,45 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import com.example.challenge_squad_apps.R
-import com.example.challenge_squad_apps.database.AppDataBase
-import com.example.challenge_squad_apps.database.dao.FavoritesDao
 import com.example.challenge_squad_apps.databinding.MainActivityBinding
 import com.example.challenge_squad_apps.ui.recyclerview.RecyclerViewAdapter
 import com.example.challenge_squad_apps.ui.recyclerview.RecyclerViewListener
 import com.example.challenge_squad_apps.ui.utils.dialogs.DeleteDeviceDialog
-import com.example.challenge_squad_apps.webclient.WebClient
 import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
-import com.example.challenge_squad_apps.webclient.dto.models.DeviceType
-import com.example.challenge_squad_apps.webclient.dto.models.Favorites
+import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
+import com.example.challenge_squad_apps.ui.view_models.MainViewModel
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDialog.DeleteDeviceDialogListener {
 
-    private val webClient by lazy { WebClient() }
 
-    private var deviceList: MutableList<Device> = mutableListOf()
     private lateinit var binding: MainActivityBinding
-    private lateinit var dataBase: AppDataBase
-    private lateinit var favoritesDao: FavoritesDao
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var lifecycleScope: LifecycleCoroutineScope
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        dataBase = AppDataBase.instance(applicationContext)
-        favoritesDao = dataBase.favoritesDeviceDao()
+
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        mainViewModel.roomInstance(applicationContext)
 
         configureSearchBar()
         configureFab()
         setupView()
     }
 
-    private fun setupView() {
-        lifecycleScope = lifecycle.coroutineScope
-        lifecycleScope.launch {
-            updateList()
-            setupRecyclerView()
-            configDeviceListView()
-        }
-    }
-
-    private suspend fun updateList() {
-        if (deviceList.isNotEmpty()) deviceList.clear()
-        lifecycleScope.launch {
-            val videoDeviceList = webClient.getVideo()
-            val alarmDeviceList = webClient.getAlarm()
-            deviceList.addAll(videoDeviceList)
-            deviceList.addAll(alarmDeviceList)
-        }.join()
-    }
-
-    private fun configureFab() {
-        binding.fab.setOnClickListener {
-            binding.fab.isEnabled = false
-            val intent = Intent(this, AddDeviceActivity::class.java)
-            startActivity(intent)
-
-        }
+    override fun onResume() {
+        super.onResume()
+        binding.fab.isClickable = true
     }
 
     private fun configureSearchBar() {
@@ -88,9 +62,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
                 val deviceFiltered: MutableList<Device>
 
                 deviceFiltered = if (s.isEmpty()) {
-                    deviceList
+                    mainViewModel.returnDeviceList()
                 } else (
-                        deviceList.filter { device -> device.name.contains(s, ignoreCase = true) }.toMutableList()
+                        mainViewModel.searchDevice(s)
                         )
                 updateRecyclerView(deviceFiltered)
             }
@@ -100,12 +74,61 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
         })
     }
 
+    private fun configureFab() {
+        binding.fab.setOnClickListener {
+            binding.fab.isClickable = false
+            val intent = Intent(this, AddDeviceActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
-    private fun setupRecyclerView() {
+    private fun setupView() {
+        lifecycleScope = lifecycle.coroutineScope
+        lifecycleScope.launch {
+            setupRecyclerView()
+            configDeviceListView()
+        }
+    }
+
+
+    private suspend fun setupRecyclerView() {
         recyclerViewAdapter = RecyclerViewAdapter(this)
-        recyclerViewAdapter.submitList(deviceList)
+        recyclerViewAdapter.submitList(mainViewModel.updateDeviceList())
         binding.deviceListRecyclerView.apply { adapter = recyclerViewAdapter }
     }
+
+    private fun configDeviceListView() {
+
+        binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem
+                .itemId) {
+                R.id.homeMenuItem -> {
+                    updateRecyclerView(mainViewModel.returnDeviceList())
+                    true
+                }
+
+                R.id.videoDevicesMenuItem -> {
+                    updateRecyclerView(mainViewModel.getVideoDevices())
+                    true
+                }
+
+                R.id.alarmDevicesMenuItem -> {
+                    updateRecyclerView(mainViewModel.getAlarmDevices())
+                    true
+                }
+
+                R.id.favoriteDevicesMenuItem -> {
+                    updateRecyclerView(mainViewModel.getFavorites())
+                    true
+                }
+
+                else -> {
+                    false
+                }
+            }
+        }
+    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView(deviceList: MutableList<Device>) {
@@ -114,64 +137,20 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
     }
 
 
-    private fun configDeviceListView() {
-
-        binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem
-                .itemId) {
-                R.id.homeMenuItem -> {
-                    updateRecyclerView(deviceList)
-                    true
-                }
-
-                R.id.videoDevicesMenuItem -> {
-                    val videoDevices: MutableList<Device> = deviceList.filter { it.type == DeviceType.VIDEO.type }.toMutableList()
-                    updateRecyclerView(videoDevices)
-                    true
-                }
-
-                R.id.alarmDevicesMenuItem -> {
-                    val alarmDevices: MutableList<Device> = deviceList.filter { it.type == DeviceType.ALARM.type }.toMutableList()
-                    updateRecyclerView(alarmDevices)
-                    true
-                }
-
-                R.id.favoriteDevicesMenuItem -> {
-                    updateRecyclerView(getFavorites())
-                    true
-                }
-
-                else -> {
-                    false
-                }
-            }
-        }
-    }
-
-    private fun getFavorites(): MutableList<Device> {
-        val favorites = favoritesDao.getFavoriteDeviceList()
-        val devicesFavoriteList = mutableListOf<Device>()
-
-        deviceList.forEach { device ->
-            favorites.forEach { favorite ->
-                if (device.id == favorite.id) devicesFavoriteList.add(device)
-            }
-        }
-        return devicesFavoriteList
-    }
-
     private fun onMenuItemPressed(popup: PopupMenu, device: Device) {
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.editMenuItem -> {
                     val intent = Intent(this, EditDeviceActivity::class.java)
-                    intent.putExtra("Type", device.type)
+
                     intent.putExtra("id", device.id)
 
                     if (device is VideoDevice) {
-                        intent.putExtra("rastreability", device.serial)
+                        intent.putExtra("Rastreability", device.serial)
+                        intent.putExtra("Type", DeviceType.VIDEO.type)
                     } else if (device is AlarmDevice) {
-                        intent.putExtra("rastreability", device.macAddress)
+                        intent.putExtra("Rastreability", device.macAddress)
+                        intent.putExtra("Type", DeviceType.ALARM.type)
                     }
 
                     this.startActivity(intent)
@@ -180,13 +159,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
 
                 R.id.infoMenuItem -> {
                     val intent = Intent(this, InfoDeviceActivity::class.java)
-                    intent.putExtra("Type", device.type)
-
                     if (device is AlarmDevice) {
                         intent.putExtra("Mac Address", device.macAddress)
+                        intent.putExtra("Type", DeviceType.ALARM.type)
+
                     } else if (device is VideoDevice) {
                         intent.putExtra("Serial", device.serial)
                         intent.putExtra("Username", device.username)
+                        intent.putExtra("Type", DeviceType.VIDEO.type)
                     }
 
                     this.startActivity(intent)
@@ -194,20 +174,19 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
                 }
 
                 R.id.unfavoriteMenuItem -> {
-                    if (favoritesDao.deleteFavoriteDevice(device.id) != 0) Toast.makeText(this, "Favorito removido!", Toast.LENGTH_SHORT).show()
+                    if (mainViewModel.deleteFavorite(device.id)) Toast.makeText(this, "Favorito removido!", Toast.LENGTH_SHORT).show()
                     true
                 }
 
                 R.id.favoriteMenuItem -> {
-                    favoritesDao.saveFavoriteDevice(Favorites(device.id))
+                    mainViewModel.saveFavorite(device.id)
                     Toast.makeText(this, "Favorito adicionado", Toast.LENGTH_SHORT).show()
                     true
                 }
 
                 R.id.deleteMenuItem -> {
-                    DeleteDeviceDialog.newInstance(device)
-//                    updateList()
-//                    updateRecyclerView(deviceList)
+                    val dialog = DeleteDeviceDialog.newInstance(device)
+                    dialog.show(supportFragmentManager, DeleteDeviceDialog.TAG)
                     true
                 }
 
@@ -218,7 +197,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
         }
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onDropdownPressed(view: View, device: Device) {
         val popup = PopupMenu(this, view)
 
@@ -228,25 +206,32 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
             MenuCompat.setGroupDividerEnabled(popup.menu, true)
             setForceShowIcon(true)
 
-            if (favoritesDao.haveFavoriteDevice(device.id)) {
-                menu.findItem(R.id.favoriteMenuItem).isVisible = false
-                menu.findItem(R.id.unfavoriteMenuItem).isVisible = true
+
+            if (mainViewModel.checkFavorite(device)) {
+                with(menu) {
+                    findItem(R.id.favoriteMenuItem).isVisible = false
+                    findItem(R.id.unfavoriteMenuItem).isVisible = true
+                }
             } else {
-                menu.findItem(R.id.favoriteMenuItem).isVisible = true
-                menu.findItem(R.id.unfavoriteMenuItem).isVisible = false
+                with(menu) {
+                    findItem(R.id.favoriteMenuItem).isVisible = true
+                    findItem(R.id.unfavoriteMenuItem).isVisible = false
+                }
             }
 
             show()
             onMenuItemPressed(this, device)
         }
-
     }
 
-    override suspend fun confirmButtonClicked(device: Device): Boolean {
-        return if (device is AlarmDevice) {
-            webClient.deleteAlarm(device.id)
+    override suspend fun confirmButtonClicked(device: Device) {
+        val successOnDelete = mainViewModel.confirmButtonClicked(device)
+
+        if (successOnDelete) {
+            Toast.makeText(this@MainActivity, "Dispositivo removido!", Toast.LENGTH_SHORT).show()
+            updateRecyclerView(mainViewModel.updateDeviceList())
         } else {
-            webClient.deleteVideo(device.id)
+            Toast.makeText(this, "Falha ao remover dispositivo!", Toast.LENGTH_SHORT).show()
         }
     }
 }

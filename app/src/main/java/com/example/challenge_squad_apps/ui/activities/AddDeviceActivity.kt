@@ -5,35 +5,35 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.AddDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.AddDeviceDialog
-import com.example.challenge_squad_apps.webclient.WebClient
-import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
-import com.example.challenge_squad_apps.webclient.dto.models.DeviceType
-import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
-import kotlinx.coroutines.Dispatchers
+import com.example.challenge_squad_apps.ui.utils.dialogs.EditDeviceDialog
+import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
+import com.example.challenge_squad_apps.ui.view_models.AddDeviceViewModel
 import kotlinx.coroutines.launch
 
-class AddDeviceActivity : AppCompatActivity() {
+class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogListener {
 
     private lateinit var binding: AddDeviceBinding
+    private lateinit var addViewModel: AddDeviceViewModel
     private var deviceType = ""
-    private val webClient by lazy {
-        WebClient()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = AddDeviceBinding.inflate(layoutInflater)
+        addViewModel = ViewModelProvider(this)[AddDeviceViewModel::class.java]
         setContentView(binding.root)
+
+        setupListeners()
     }
 
     override fun onResume() {
         super.onResume()
         readDeviceTypeInput()
-        setupListeners()
     }
 
     private fun setupListeners() {
@@ -46,43 +46,16 @@ class AddDeviceActivity : AppCompatActivity() {
                 when (menuItem.itemId) {
                     R.id.save_menu -> {
 
-                        val newName = inputAddDeviceName.text.toString()
-                        val newSerialNumber: String? = inputAddDeviceSerialNumber.text.toString()
-                        val newUser: String? = inputAddDeviceUser.text.toString()
-                        val newMacAddress: String? = inputAddDeviceMacAddress.text.toString()
-                        val newPassword = inputAddDevicePassword.text.toString()
+                        val name = inputAddDeviceName.text.toString()
+                        val serialNumber: String? = inputAddDeviceSerialNumber.text.toString()
+                        val user: String? = inputAddDeviceUser.text.toString()
+                        val macAddress: String? = inputAddDeviceMacAddress.text.toString()
+                        val password = inputAddDevicePassword.text.toString()
 
-                        when (deviceType) {
-                            (DeviceType.ALARME.type) -> {
-                                val createdDevice = AlarmDevice(
-                                    id = "",
-                                    name = newName,
-                                    macAddress = newMacAddress,
-                                    password = newPassword,
-                                    type = null
-                                )
-
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    val returnBackend = webClient.addDevice(createdDevice)
-                                    AddDeviceDialog.newInstance(returnBackend)
-                                }
-                            }
-
-                            (DeviceType.VÍDEO.type) -> {
-                                val createdDevice = VideoDevice(
-                                    id = "",
-                                    name = newName,
-                                    serial = newSerialNumber,
-                                    username = newUser,
-                                    password = newPassword,
-                                    type = null
-                                )
-
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    val returnBackend = webClient.addDevice(createdDevice)
-                                    AddDeviceDialog.newInstance(returnBackend)
-                                }
-                            }
+                        lifecycleScope.launch {
+                            val returnBackend = addViewModel.addDevice(deviceType, name, serialNumber, user, macAddress, password)
+                            val dialog = AddDeviceDialog.newInstance(returnBackend)
+                            dialog.show(supportFragmentManager, EditDeviceDialog.TAG)
                         }
                         true
                     }
@@ -122,26 +95,35 @@ class AddDeviceActivity : AppCompatActivity() {
     }
 
     private fun showVideoDeviceInfo() {
-        binding.addDeviceName.visibility = View.VISIBLE
-        binding.addDeviceSerialNumber.visibility = View.VISIBLE
-        binding.addDeviceUser.visibility = View.VISIBLE
-        binding.addDevicePassword.visibility = View.VISIBLE
+        with(binding) {
+            addDeviceName.visibility = View.VISIBLE
+            addDeviceSerialNumber.visibility = View.VISIBLE
+            addDeviceUser.visibility = View.VISIBLE
+            addDevicePassword.visibility = View.VISIBLE
+        }
     }
 
     private fun hideVideoDeviceInfo() {
-        binding.addDeviceUser.visibility = View.GONE
-        binding.addDeviceSerialNumber.visibility = View.GONE
+        with(binding) {
+            addDeviceUser.visibility = View.GONE
+            addDeviceSerialNumber.visibility = View.GONE
+        }
     }
 
     private fun showAlarmDeviceInfo() {
-        binding.addDeviceName.visibility = View.VISIBLE
-        binding.addDeviceMacAddress.visibility = View.VISIBLE
-        binding.addDevicePassword.visibility = View.VISIBLE
+        with(binding) {
+            addDeviceName.visibility = View.VISIBLE
+            addDeviceMacAddress.visibility = View.VISIBLE
+            addDevicePassword.visibility = View.VISIBLE
+        }
     }
 
     private fun hideAlarmDeviceInfo() {
         binding.addDeviceMacAddress.visibility = View.GONE
+    }
 
+    override fun confirmButtonClicked() {
+        this@AddDeviceActivity.finish()
     }
 
 }

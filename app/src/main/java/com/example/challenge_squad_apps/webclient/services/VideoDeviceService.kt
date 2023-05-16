@@ -2,6 +2,7 @@ package com.example.challenge_squad_apps.webclient.services
 
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.EditDevice
+import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -25,7 +26,7 @@ interface VideoDeviceService {
 
     @POST("video-devices")
     suspend fun postVideoDevice(
-        @Body device: Device
+        @Body device: VideoDevice
     ): Response<ResponseBody>
 
     @DELETE("video-devices/{id}")

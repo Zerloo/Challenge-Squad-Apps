@@ -10,6 +10,5 @@ data class AlarmDevice(
     override var name: String,
     val macAddress: String?,
     override var password: String,
-    override val type: String?,
-) : Device(id, name, password, type)
+) : Device(id, name, password)
 
