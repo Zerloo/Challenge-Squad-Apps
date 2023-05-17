@@ -74,8 +74,8 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
 
     private fun configureFab() {
         with(binding.fab) {
-            binding.fab.setOnClickListener {
-                binding.fab.isClickable = false
+            setOnClickListener {
+                isClickable = false
                 val intent = Intent(this@MainActivity, AddDeviceActivity::class.java)
                 startActivity(intent)
             }
