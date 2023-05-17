@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.activities
+package com.example.challenge_squad_apps.ui.activities.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -15,23 +15,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.MainActivityBinding
-import com.example.challenge_squad_apps.ui.recyclerview.RecyclerViewAdapter
-import com.example.challenge_squad_apps.ui.recyclerview.RecyclerViewListener
+import com.example.challenge_squad_apps.ui.activities.addDevice.AddDeviceActivity
+import com.example.challenge_squad_apps.ui.activities.editDevice.EditDeviceActivity
+import com.example.challenge_squad_apps.ui.activities.infoDevice.InfoDeviceActivity
 import com.example.challenge_squad_apps.ui.utils.dialogs.DeleteDeviceDialog
 import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
-import com.example.challenge_squad_apps.ui.view_models.MainViewModel
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDialog.DeleteDeviceDialogListener {
+class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDialog.DeleteDeviceDialogListener {
 
 
     private lateinit var binding: MainActivityBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var lifecycleScope: LifecycleCoroutineScope
-    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private lateinit var mainDeviceListAdapter: MainDeviceListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +42,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         mainViewModel.roomInstance(applicationContext)
 
-        configureSearchBar()
-        configureFab()
         setupView()
     }
 
@@ -62,10 +60,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
                 val deviceFiltered: MutableList<Device>
 
                 deviceFiltered = if (s.isEmpty()) {
-                    mainViewModel.returnDeviceList()
-                } else (
-                        mainViewModel.searchDevice(s)
-                        )
+                    mainViewModel.deviceList
+                } else {
+                    mainViewModel.searchDevice(s)
+                }
                 updateRecyclerView(deviceFiltered)
             }
 
@@ -75,14 +73,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
     }
 
     private fun configureFab() {
-        binding.fab.setOnClickListener {
-            binding.fab.isClickable = false
-            val intent = Intent(this, AddDeviceActivity::class.java)
-            startActivity(intent)
+        with(binding.fab) {
+            binding.fab.setOnClickListener {
+                binding.fab.isClickable = false
+                val intent = Intent(this@MainActivity, AddDeviceActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
     private fun setupView() {
+        configureSearchBar()
+        configureFab()
         lifecycleScope = lifecycle.coroutineScope
         lifecycleScope.launch {
             setupRecyclerView()
@@ -92,18 +94,17 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
 
 
     private suspend fun setupRecyclerView() {
-        recyclerViewAdapter = RecyclerViewAdapter(this)
-        recyclerViewAdapter.submitList(mainViewModel.updateDeviceList())
-        binding.deviceListRecyclerView.apply { adapter = recyclerViewAdapter }
+        mainDeviceListAdapter = MainDeviceListAdapter(this)
+        mainDeviceListAdapter.submitList(mainViewModel.updateDeviceList())
+        binding.deviceListRecyclerView.apply { adapter = mainDeviceListAdapter }
     }
 
     private fun configDeviceListView() {
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem
-                .itemId) {
+            when (menuItem.itemId) {
                 R.id.homeMenuItem -> {
-                    updateRecyclerView(mainViewModel.returnDeviceList())
+                    updateRecyclerView(mainViewModel.deviceList)
                     true
                 }
 
@@ -132,8 +133,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView(deviceList: MutableList<Device>) {
-        recyclerViewAdapter.submitList(deviceList)
-        recyclerViewAdapter.notifyDataSetChanged()
+        mainDeviceListAdapter.apply {
+            submitList(deviceList)
+            notifyDataSetChanged()
+        }
     }
 
 
@@ -146,11 +149,15 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
                     intent.putExtra("id", device.id)
 
                     if (device is VideoDevice) {
-                        intent.putExtra("Rastreability", device.serial)
-                        intent.putExtra("Type", DeviceType.VIDEO.type)
+                        intent.apply {
+                            putExtra("Rastreability", device.serial)
+                            putExtra("Type", DeviceType.VIDEO.type)
+                        }
                     } else if (device is AlarmDevice) {
-                        intent.putExtra("Rastreability", device.macAddress)
-                        intent.putExtra("Type", DeviceType.ALARM.type)
+                        intent.apply {
+                            putExtra("Rastreability", device.macAddress)
+                            putExtra("Type", DeviceType.ALARM.type)
+                        }
                     }
 
                     this.startActivity(intent)
@@ -160,13 +167,17 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
                 R.id.infoMenuItem -> {
                     val intent = Intent(this, InfoDeviceActivity::class.java)
                     if (device is AlarmDevice) {
-                        intent.putExtra("Mac Address", device.macAddress)
-                        intent.putExtra("Type", DeviceType.ALARM.type)
+                        intent.apply {
+                            putExtra("Mac Address", device.macAddress)
+                            putExtra("Type", DeviceType.ALARM.type)
+                        }
 
                     } else if (device is VideoDevice) {
-                        intent.putExtra("Serial", device.serial)
-                        intent.putExtra("Username", device.username)
-                        intent.putExtra("Type", DeviceType.VIDEO.type)
+                        intent.apply {
+                            putExtra("Serial", device.serial)
+                            putExtra("Username", device.username)
+                            putExtra("Type", DeviceType.VIDEO.type)
+                        }
                     }
 
                     this.startActivity(intent)
@@ -206,14 +217,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewListener, DeleteDeviceDial
             MenuCompat.setGroupDividerEnabled(popup.menu, true)
             setForceShowIcon(true)
 
-
-            if (mainViewModel.checkFavorite(device)) {
-                with(menu) {
+            with(menu) {
+                if (mainViewModel.checkFavorite(device)) {
                     findItem(R.id.favoriteMenuItem).isVisible = false
                     findItem(R.id.unfavoriteMenuItem).isVisible = true
-                }
-            } else {
-                with(menu) {
+                } else {
                     findItem(R.id.favoriteMenuItem).isVisible = true
                     findItem(R.id.unfavoriteMenuItem).isVisible = false
                 }

@@ -25,7 +25,7 @@ class RetrofitInitialization(token: String) {
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(Constants.baseUrl)
+        .baseUrl(Constants.BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()

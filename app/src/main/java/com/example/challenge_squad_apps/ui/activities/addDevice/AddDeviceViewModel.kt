@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.view_models
+package com.example.challenge_squad_apps.ui.activities.addDevice
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

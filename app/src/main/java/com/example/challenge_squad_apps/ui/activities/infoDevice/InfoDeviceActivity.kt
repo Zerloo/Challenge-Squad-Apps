@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.activities
+package com.example.challenge_squad_apps.ui.activities.infoDevice
 
 import android.os.Bundle
 import android.view.View

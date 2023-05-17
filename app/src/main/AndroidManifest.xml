@@ -16,7 +16,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.activities.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,9 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.EditDeviceActivity" />
-        <activity android:name=".ui.activities.InfoDeviceActivity" />
-        <activity android:name=".ui.activities.AddDeviceActivity" />
+        <activity android:name=".ui.activities.editDevice.EditDeviceActivity" />
+        <activity android:name=".ui.activities.infoDevice.InfoDeviceActivity" />
+        <activity android:name=".ui.activities.addDevice.AddDeviceActivity" />
     </application>
 
 </manifest>

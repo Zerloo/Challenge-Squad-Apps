@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.view_models
+package com.example.challenge_squad_apps.ui.activities.main
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
 
     private val webClient by lazy { WebClient() }
-    private var deviceList: MutableList<Device> = mutableListOf()
+    var deviceList: MutableList<Device> = mutableListOf()
+        private set
     private lateinit var favoritesDao: FavoritesDao
     private lateinit var dataBase: AppDataBase
 
@@ -33,10 +34,6 @@ class MainViewModel : ViewModel() {
             deviceList.addAll(videoDeviceList)
             deviceList.addAll(alarmDeviceList)
         }.join()
-        return returnDeviceList()
-    }
-
-    fun returnDeviceList(): MutableList<Device> {
         return deviceList
     }
 
@@ -44,19 +41,18 @@ class MainViewModel : ViewModel() {
         val favorites = favoritesDao.getFavoriteDeviceList()
         val devicesFavoriteList = mutableListOf<Device>()
 
-        deviceList.forEach { device ->
-            favorites.forEach { favorite ->
-                if (device.id == favorite.id) devicesFavoriteList.add(device)
-            }
+        favorites.forEach { favorite ->
+            deviceList.find { it.id == favorite.id }?.let { devicesFavoriteList.add(it) }
         }
+
         return devicesFavoriteList
     }
 
-    fun getVideoDevices(): MutableList<Device>{
+    fun getVideoDevices(): MutableList<Device> {
         return deviceList.filterIsInstance<VideoDevice>().toMutableList()
     }
 
-    fun getAlarmDevices(): MutableList<Device>{
+    fun getAlarmDevices(): MutableList<Device> {
         return deviceList.filterIsInstance<AlarmDevice>().toMutableList()
     }
 
@@ -64,7 +60,7 @@ class MainViewModel : ViewModel() {
         return favoritesDao.deleteFavoriteDevice(deviceId) != 0
     }
 
-    fun saveFavorite(deviceId: String){
+    fun saveFavorite(deviceId: String) {
         return favoritesDao.saveFavoriteDevice(Favorites(deviceId))
     }
 
@@ -81,6 +77,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun checkFavorite(device: Device): Boolean {
-        return favoritesDao.haveFavoriteDevice(device.id)
+        return favoritesDao.isFavoriteDevice(device.id)
     }
 }

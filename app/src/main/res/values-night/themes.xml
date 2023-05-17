@@ -3,7 +3,7 @@
     <style name="Theme.ChallengeSquadApps" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/gray_icons</item>
-        <item name="colorPrimaryVariant">@color/gray_bg</item>
+        <item name="colorPrimaryVariant">@color/blue_background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.recyclerview
+package com.example.challenge_squad_apps.ui.activities.main
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
@@ -7,10 +7,10 @@ import com.example.challenge_squad_apps.databinding.DeviceListItemBinding
 import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 
-class RecyclerViewViewHolder(private val binding: DeviceListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+class MainDeviceListViewHolder(private val binding: DeviceListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("ResourceType")
-    fun bind(device: Device, listener: RecyclerViewListener) {
+    fun bind(device: Device, listener: MainDeviceListListener) {
 
         with(binding) {
             deviceNameTextView.text = device.name

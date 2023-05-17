@@ -1,13 +1,10 @@
 package com.example.challenge_squad_apps.ui.utils.dialogs
 
 import android.app.Dialog
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
-import com.example.challenge_squad_apps.databinding.DialogtestBinding
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch

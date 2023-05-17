@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.view_models
+package com.example.challenge_squad_apps.ui.activities.editDevice
 
 import androidx.lifecycle.ViewModel
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType

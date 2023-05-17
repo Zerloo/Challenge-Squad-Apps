@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.activities
+package com.example.challenge_squad_apps.ui.activities.editDevice
 
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,6 @@ import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.EditDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.EditDeviceDialog
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
-import com.example.challenge_squad_apps.ui.view_models.EditDeviceViewModel
 import kotlinx.coroutines.launch
 
 class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialogListener {

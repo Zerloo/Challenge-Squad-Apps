@@ -11,7 +11,7 @@
             android:id="@+id/add_device_topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/gray_bg"
+            android:background="@color/blue_background"
             app:menu="@menu/save_menu"
             app:navigationIcon="@drawable/icclose"
             app:title="@string/add_device_novo_dispositivo" />
@@ -21,7 +21,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_bg"
+        android:background="@color/blue_background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +47,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
+                    android:popupBackground="@color/gray_buttons"
+                    android:textColor="@color/gray_icons"
                     app:simpleItems="@array/device_types" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -136,7 +138,8 @@
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_password"
                 android:visibility="gone"
-                app:endIconMode="password_toggle"
+                app:passwordToggleDrawable="@drawable/password_icon_state"
+                app:passwordToggleEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_device_user">

@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.activities
+package com.example.challenge_squad_apps.ui.activities.addDevice
 
 import android.os.Bundle
 import android.view.View
@@ -12,7 +12,6 @@ import com.example.challenge_squad_apps.databinding.AddDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.AddDeviceDialog
 import com.example.challenge_squad_apps.ui.utils.dialogs.EditDeviceDialog
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
-import com.example.challenge_squad_apps.ui.view_models.AddDeviceViewModel
 import kotlinx.coroutines.launch
 
 class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogListener {
@@ -55,7 +54,7 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
                         lifecycleScope.launch {
                             val returnBackend = addViewModel.addDevice(deviceType, name, serialNumber, user, macAddress, password)
                             val dialog = AddDeviceDialog.newInstance(returnBackend)
-                            dialog.show(supportFragmentManager, EditDeviceDialog.TAG)
+                            dialog.show(supportFragmentManager, AddDeviceDialog.TAG)
                         }
                         true
                     }
@@ -67,16 +66,19 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
     }
 
     private fun changeLayoutVisibility() {
+        with(binding.addDeviceType) {
+            when (deviceType) {
+                (DeviceType.ALARME.type) -> {
+                    showAlarmDeviceInfo()
+                    hideVideoDeviceInfo()
+                    isHelperTextEnabled = false
+                }
 
-        when (deviceType) {
-            (DeviceType.ALARME.type) -> {
-                showAlarmDeviceInfo()
-                hideVideoDeviceInfo()
-            }
-
-            (DeviceType.VÍDEO.type) -> {
-                showVideoDeviceInfo()
-                hideAlarmDeviceInfo()
+                (DeviceType.VÍDEO.type) -> {
+                    showVideoDeviceInfo()
+                    hideAlarmDeviceInfo()
+                    isHelperTextEnabled = false
+                }
             }
         }
     }

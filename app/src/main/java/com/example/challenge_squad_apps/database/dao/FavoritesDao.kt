@@ -19,7 +19,7 @@ interface FavoritesDao {
     fun getFavoriteDeviceByID(id: String): Favorites
 
     @Query("SELECT EXISTS (SELECT 1 FROM Favorites WHERE id = :id)")
-    fun haveFavoriteDevice(id: String): Boolean
+    fun isFavoriteDevice(id: String): Boolean
 
     @Query("DELETE FROM Favorites WHERE id = :id")
     fun deleteFavoriteDevice(id: String): Int

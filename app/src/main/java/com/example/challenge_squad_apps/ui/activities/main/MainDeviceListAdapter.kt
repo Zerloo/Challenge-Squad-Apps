@@ -1,4 +1,4 @@
-package com.example.challenge_squad_apps.ui.recyclerview
+package com.example.challenge_squad_apps.ui.activities.main
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,14 +9,14 @@ import com.example.challenge_squad_apps.databinding.DeviceListItemBinding
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 
 
-class RecyclerViewAdapter(private val listener: RecyclerViewListener) : ListAdapter<Device, RecyclerViewViewHolder>(RecyclerViewAdapter) {
+class MainDeviceListAdapter(private val listener: MainDeviceListListener) : ListAdapter<Device, MainDeviceListViewHolder>(MainDeviceListAdapter) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainDeviceListViewHolder {
         val binding = DeviceListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RecyclerViewViewHolder(binding)
+        return MainDeviceListViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecyclerViewViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MainDeviceListViewHolder, position: Int) {
         holder.bind(getItem(position), listener)
     }
 

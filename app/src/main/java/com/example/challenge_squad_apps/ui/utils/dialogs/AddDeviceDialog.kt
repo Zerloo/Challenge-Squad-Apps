@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.example.challenge_squad_apps.R
-import com.example.challenge_squad_apps.ui.activities.AddDeviceActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AddDeviceDialog(private val returnBackend: Boolean) : AppCompatDialogFragment() {

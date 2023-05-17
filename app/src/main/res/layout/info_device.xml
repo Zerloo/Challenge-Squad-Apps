@@ -12,7 +12,7 @@
             android:id="@+id/info_device_topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/gray_bg"
+            android:background="@color/blue_background"
             app:navigationIcon="@drawable/icclose"
             app:title="@string/info_informacoes" />
 
@@ -21,7 +21,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_bg"
+        android:background="@color/blue_background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
