@@ -3,6 +3,7 @@ package com.example.challenge_squad_apps.webclient.services
 import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.EditDevice
+import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,7 +16,7 @@ import retrofit2.http.Path
 interface AlarmDeviceService {
 
     @GET("alarm-centrals")
-    suspend fun alarmDeviceService(): Response<ResponseBody>
+    fun alarmDeviceService(): Single<Response<ResponseBody>>
 
     @PATCH("alarm-centrals/{id}")
     suspend fun patchAlarmDevice(
@@ -24,9 +25,9 @@ interface AlarmDeviceService {
     ): Response<ResponseBody>
 
     @POST("alarm-centrals")
-    suspend fun postAlarmDevice(
+    fun postAlarmDevice(
         @Body device: AlarmDevice
-    ): Response<ResponseBody>
+    ):  Single<Response<ResponseBody>>
 
     @DELETE("alarm-centrals/{id}")
     suspend fun deleteAlarmDeviceService(@Path("id") id: String): Response<ResponseBody>

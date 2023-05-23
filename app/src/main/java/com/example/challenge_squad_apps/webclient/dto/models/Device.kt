@@ -6,7 +6,10 @@ import androidx.room.PrimaryKey
 @Entity
 abstract class Device(
     @PrimaryKey
+    @Transient
     open val id: String,
+    @Transient
     open var name: String,
+    @Transient
     open var password: String,
 )

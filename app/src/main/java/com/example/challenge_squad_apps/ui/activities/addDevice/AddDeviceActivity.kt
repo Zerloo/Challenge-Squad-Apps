@@ -6,13 +6,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.AddDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.AddDeviceDialog
-import com.example.challenge_squad_apps.ui.utils.dialogs.EditDeviceDialog
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
-import kotlinx.coroutines.launch
 
 class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogListener {
 
@@ -24,15 +21,26 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
         super.onCreate(savedInstanceState)
 
         binding = AddDeviceBinding.inflate(layoutInflater)
-        addViewModel = ViewModelProvider(this)[AddDeviceViewModel::class.java]
         setContentView(binding.root)
+        addViewModel = ViewModelProvider(this)[AddDeviceViewModel::class.java]
 
         setupListeners()
+        registerObservers()
     }
 
     override fun onResume() {
         super.onResume()
         readDeviceTypeInput()
+    }
+
+    private fun registerObservers() {
+        addViewModel.addDeviceLiveData.observe(this) { responseStatus ->
+            showAddDeviceDialog(responseStatus)
+        }
+    }
+    private fun showAddDeviceDialog(showDialog: Boolean){
+        val dialog = AddDeviceDialog.newInstance(showDialog)
+        dialog.show(supportFragmentManager, AddDeviceDialog.TAG)
     }
 
     private fun setupListeners() {
@@ -50,12 +58,8 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
                         val user: String? = inputAddDeviceUser.text.toString()
                         val macAddress: String? = inputAddDeviceMacAddress.text.toString()
                         val password = inputAddDevicePassword.text.toString()
+                        addViewModel.addDevice(deviceType, name, serialNumber, user, macAddress, password)
 
-                        lifecycleScope.launch {
-                            val returnBackend = addViewModel.addDevice(deviceType, name, serialNumber, user, macAddress, password)
-                            val dialog = AddDeviceDialog.newInstance(returnBackend)
-                            dialog.show(supportFragmentManager, AddDeviceDialog.TAG)
-                        }
                         true
                     }
 

@@ -3,6 +3,7 @@ package com.example.challenge_squad_apps.ui.activities.main
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore.Video
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -10,28 +11,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.coroutineScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.MainActivityBinding
 import com.example.challenge_squad_apps.ui.activities.addDevice.AddDeviceActivity
 import com.example.challenge_squad_apps.ui.activities.editDevice.EditDeviceActivity
 import com.example.challenge_squad_apps.ui.activities.infoDevice.InfoDeviceActivity
 import com.example.challenge_squad_apps.ui.utils.dialogs.DeleteDeviceDialog
+import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
 import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
-import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDialog.DeleteDeviceDialogListener {
 
 
     private lateinit var binding: MainActivityBinding
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var lifecycleScope: LifecycleCoroutineScope
     private lateinit var mainDeviceListAdapter: MainDeviceListAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +41,15 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
         mainViewModel.roomInstance(applicationContext)
 
         setupView()
+        registerObservers()
     }
 
     override fun onResume() {
         super.onResume()
         binding.fab.isClickable = true
+        mainViewModel.updateDeviceList()
     }
+
 
     private fun configureSearchBar() {
         binding.fillSearchView.addTextChangedListener(object : TextWatcher {
@@ -85,19 +86,31 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
     private fun setupView() {
         configureSearchBar()
         configureFab()
-        lifecycleScope = lifecycle.coroutineScope
-        lifecycleScope.launch {
-            setupRecyclerView()
-            configDeviceListView()
+        setupRecyclerView()
+        configDeviceListView()
+    }
+
+
+    private fun setupRecyclerView() {
+        mainDeviceListAdapter = MainDeviceListAdapter(this)
+        binding.deviceListRecyclerView.apply { adapter = mainDeviceListAdapter }
+        mainViewModel.updateDeviceList()
+    }
+
+    private fun registerObservers() {
+        mainViewModel.deviceListLiveData.observe(this) { deviceList ->
+            deviceList.sortBy {
+                device ->
+                when (device) {
+                    is VideoDevice -> 0
+                    is AlarmDevice -> 1
+                    else -> 2
+                }
+            }
+            updateRecyclerView(deviceList)
         }
     }
 
-
-    private suspend fun setupRecyclerView() {
-        mainDeviceListAdapter = MainDeviceListAdapter(this)
-        mainDeviceListAdapter.submitList(mainViewModel.updateDeviceList())
-        binding.deviceListRecyclerView.apply { adapter = mainDeviceListAdapter }
-    }
 
     private fun configDeviceListView() {
 
@@ -237,7 +250,7 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
 
         if (successOnDelete) {
             Toast.makeText(this@MainActivity, "Dispositivo removido!", Toast.LENGTH_SHORT).show()
-            updateRecyclerView(mainViewModel.updateDeviceList())
+//            updateRecyclerView(mainViewModel.updateDeviceList())
         } else {
             Toast.makeText(this, "Falha ao remover dispositivo!", Toast.LENGTH_SHORT).show()
         }

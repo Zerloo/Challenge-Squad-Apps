@@ -2,12 +2,13 @@ package com.example.challenge_squad_apps.webclient
 
 import com.example.challenge_squad_apps.webclient.services.AlarmDeviceService
 import com.example.challenge_squad_apps.webclient.services.VideoDeviceService
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class RetrofitInitialization(token: String) {
@@ -20,14 +21,14 @@ class RetrofitInitialization(token: String) {
         }
         .build()
 
-    val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
+    val gson : Gson = GsonBuilder()
+        .create()
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(Constants.BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
     val videoDeviceService: VideoDeviceService = retrofit.create(VideoDeviceService::class.java)
