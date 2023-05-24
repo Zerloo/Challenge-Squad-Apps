@@ -19,16 +19,16 @@ interface AlarmDeviceService {
     fun alarmDeviceService(): Single<Response<ResponseBody>>
 
     @PATCH("alarm-centrals/{id}")
-    suspend fun patchAlarmDevice(
+    fun patchAlarmDevice(
         @Path("id") id: String,
-        @Body device: EditDevice
-    ): Response<ResponseBody>
+        @Body device: EditDevice,
+    ): Single<Response<ResponseBody>>
 
     @POST("alarm-centrals")
     fun postAlarmDevice(
-        @Body device: AlarmDevice
-    ):  Single<Response<ResponseBody>>
+        @Body device: AlarmDevice,
+    ): Single<Response<ResponseBody>>
 
     @DELETE("alarm-centrals/{id}")
-    suspend fun deleteAlarmDeviceService(@Path("id") id: String): Response<ResponseBody>
+    fun deleteAlarmDeviceService(@Path("id") id: String): Single<Response<ResponseBody>>
 }

@@ -57,15 +57,7 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-                val deviceFiltered: MutableList<Device>
-
-                deviceFiltered = if (s.isEmpty()) {
-                    mainViewModel.deviceList
-                } else {
-                    mainViewModel.searchDevice(s)
-                }
-                updateRecyclerView(deviceFiltered)
+                mainViewModel.searchDevice(s)
             }
 
             override fun afterTextChanged(s: Editable) {
@@ -99,14 +91,21 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
 
     private fun registerObservers() {
         mainViewModel.deviceListLiveData.observe(this) { deviceList ->
-            deviceList.sortBy {
-                device ->
+            deviceList.sortBy { device ->
                 when (device) {
                     is VideoDevice -> 0
                     is AlarmDevice -> 1
                     else -> 2
                 }
             }
+            updateRecyclerView(deviceList)
+        }
+
+        mainViewModel.deleteDeviceLiveData.observe(this) { responseStatus ->
+            showDeleteDeviceToast(responseStatus)
+        }
+
+        mainViewModel.filteredDeviceListLiveData.observe(this) { deviceList ->
             updateRecyclerView(deviceList)
         }
     }
@@ -117,22 +116,22 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.homeMenuItem -> {
-                    updateRecyclerView(mainViewModel.deviceList)
+                    mainViewModel.getDeviceList()
                     true
                 }
 
                 R.id.videoDevicesMenuItem -> {
-                    updateRecyclerView(mainViewModel.getVideoDevices())
+                    mainViewModel.getVideoDevices()
                     true
                 }
 
                 R.id.alarmDevicesMenuItem -> {
-                    updateRecyclerView(mainViewModel.getAlarmDevices())
+                    mainViewModel.getAlarmDevices()
                     true
                 }
 
                 R.id.favoriteDevicesMenuItem -> {
-                    updateRecyclerView(mainViewModel.getFavorites())
+                    mainViewModel.getFavorites()
                     true
                 }
 
@@ -159,19 +158,7 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
                 R.id.editMenuItem -> {
                     val intent = Intent(this, EditDeviceActivity::class.java)
 
-                    intent.putExtra("id", device.id)
-
-                    if (device is VideoDevice) {
-                        intent.apply {
-                            putExtra("Rastreability", device.serial)
-                            putExtra("Type", DeviceType.VIDEO.type)
-                        }
-                    } else if (device is AlarmDevice) {
-                        intent.apply {
-                            putExtra("Rastreability", device.macAddress)
-                            putExtra("Type", DeviceType.ALARM.type)
-                        }
-                    }
+                    sendDeviceInformation(intent, device)
 
                     this.startActivity(intent)
                     true
@@ -179,19 +166,8 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
 
                 R.id.infoMenuItem -> {
                     val intent = Intent(this, InfoDeviceActivity::class.java)
-                    if (device is AlarmDevice) {
-                        intent.apply {
-                            putExtra("Mac Address", device.macAddress)
-                            putExtra("Type", DeviceType.ALARM.type)
-                        }
 
-                    } else if (device is VideoDevice) {
-                        intent.apply {
-                            putExtra("Serial", device.serial)
-                            putExtra("Username", device.username)
-                            putExtra("Type", DeviceType.VIDEO.type)
-                        }
-                    }
+                    sendDeviceInformation(intent, device)
 
                     this.startActivity(intent)
                     true
@@ -221,6 +197,23 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
         }
     }
 
+    private fun sendDeviceInformation(intent: Intent, device: Device) {
+        intent.apply {
+            putExtra("id", device.id)
+            putExtra("name", device.name)
+            putExtra("password", device.password)
+
+            if (device is VideoDevice) {
+                putExtra("type", DeviceType.VIDEO.type)
+                putExtra("username", device.username)
+                putExtra("rastreability", device.serial)
+            } else if (device is AlarmDevice) {
+                putExtra("type", DeviceType.ALARM.type)
+                putExtra("rastreability", device.macAddress)
+            }
+        }
+    }
+
     override fun onDropdownPressed(view: View, device: Device) {
         val popup = PopupMenu(this, view)
 
@@ -245,12 +238,13 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
         }
     }
 
-    override suspend fun confirmButtonClicked(device: Device) {
-        val successOnDelete = mainViewModel.confirmButtonClicked(device)
+    override fun confirmButtonClicked(device: Device) {
+        mainViewModel.confirmButtonClicked(device)
+    }
 
-        if (successOnDelete) {
+    private fun showDeleteDeviceToast(responseStatus: Boolean) {
+        if (responseStatus) {
             Toast.makeText(this@MainActivity, "Dispositivo removido!", Toast.LENGTH_SHORT).show()
-//            updateRecyclerView(mainViewModel.updateDeviceList())
         } else {
             Toast.makeText(this, "Falha ao remover dispositivo!", Toast.LENGTH_SHORT).show()
         }

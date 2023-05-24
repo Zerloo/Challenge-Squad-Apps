@@ -17,7 +17,7 @@ class InfoDeviceActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val extras = intent.extras
-        val deviceType = extras?.getString("Type")
+        val deviceType = extras?.getString("type")
 
         setupView(deviceType, extras)
         setupListeners()
@@ -33,17 +33,33 @@ class InfoDeviceActivity : AppCompatActivity() {
         with(binding) {
             if (deviceType == DeviceType.ALARM.type){
                 fillInfoDevciceType.text = DeviceType.ALARME.type
-                fillInfoDeviceMac.text = extras!!.getString("Mac Address")
+                fillInfoDeviceMac.text = (extras!!.getString("rastreability"))
                 hideVideoInfo()
             }
             else if (deviceType == DeviceType.VIDEO.type){
                 fillInfoDevciceType.text = DeviceType.VÍDEO.type
-                fillInfoDeviceSerialNumber.text = extras!!.getString("Serial")
-                fillInfoDeviceUser.text = extras.getString("Username")
+                fillInfoDeviceSerialNumber.text = extras!!.getString("rastreability")
+                fillInfoDeviceUser.text = extras.getString("username")
                 hideAlarmInfo()
             }
         }
     }
+
+//    private fun formatMacAddress(macAddress: String?): String {
+//        val formattedMacAddress = StringBuilder()
+//
+//        val sanitizedMacAddress = macAddress?.replace(":", "")!!.replace("-", "")
+//
+//        for (i in sanitizedMacAddress.indices step 2) {
+//            formattedMacAddress.append(sanitizedMacAddress.substring(i, i + 2))
+//            if (i < sanitizedMacAddress.length - 2) {
+//                formattedMacAddress.append(":")
+//            }
+//        }
+//
+//        return formattedMacAddress.toString()
+//    }
+
 
     private fun hideAlarmInfo(){
             binding.infoLinearLayoutMac.visibility = View.GONE

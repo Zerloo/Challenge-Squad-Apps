@@ -65,17 +65,19 @@ class WebClient {
     }
 
 
-    suspend fun deleteAlarm(id: String): Boolean {
+    fun deleteAlarm(id: String): Single<Boolean> {
         val response = RetrofitInitialization(Constants.TOKEN).alarmDeviceService.deleteAlarmDeviceService(id)
-        return responseStatus(response)
+        return response
+            .map { response -> response.isSuccessful }
     }
 
-    suspend fun deleteVideo(id: String): Boolean {
+    fun deleteVideo(id: String): Single<Boolean> {
         val response = RetrofitInitialization(Constants.TOKEN).videoDeviceService.deleteVideoDeviceService(id)
-        return responseStatus(response)
+        return response
+            .map { response -> response.isSuccessful }
     }
 
-    suspend fun editVideo(id: String, newDeviceName: String?, newDeviceUsername: String?, newDevicePassword: String?): Boolean {
+    fun editVideo(id: String, newDeviceName: String?, newDeviceUsername: String?, newDevicePassword: String?): Single<Boolean> {
 
         val editedDevice = EditDevice(
             name = newDeviceName,
@@ -83,11 +85,13 @@ class WebClient {
             password = newDevicePassword,
         )
 
-        val response = RetrofitInitialization(Constants.TOKEN).videoDeviceService.patchVideoDevice(id = id, device = gson.toJson(editedDevice))
-        return responseStatus(response)
+        val response = RetrofitInitialization(Constants.TOKEN).videoDeviceService.patchVideoDevice(id = id, device = editedDevice)
+        return response
+            .map { response ->
+                response.isSuccessful }
     }
 
-    suspend fun editAlarm(id: String, newDeviceName: String?, newDevicePassword: String?): Boolean {
+    fun editAlarm(id: String, newDeviceName: String?, newDevicePassword: String?): Single<Boolean> {
         val editedDevice = EditDevice(
             name = newDeviceName,
             password = newDevicePassword,
@@ -95,7 +99,8 @@ class WebClient {
         )
 
         val response = RetrofitInitialization(Constants.TOKEN).alarmDeviceService.patchAlarmDevice(id = id, device = editedDevice)
-        return responseStatus(response)
+        return response
+            .map { response -> response.isSuccessful }
     }
 
     fun addDevice(device: Device): Single<Boolean> {
@@ -107,13 +112,8 @@ class WebClient {
             response = RetrofitInitialization(Constants.TOKEN).alarmDeviceService.postAlarmDevice(device)
         }
 
-
         return response
             .map { response -> response.isSuccessful }
-    }
-
-    private fun responseStatus(response: Response<ResponseBody>): Boolean {
-        return response.isSuccessful
     }
 }
 

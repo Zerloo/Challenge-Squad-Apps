@@ -2,14 +2,13 @@ package com.example.challenge_squad_apps.ui.activities.editDevice
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.EditDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.EditDeviceDialog
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
-import kotlinx.coroutines.launch
 
 class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialogListener {
 
@@ -24,6 +23,7 @@ class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialo
         setContentView(binding.root)
 
         setupView()
+        registerObservers()
     }
 
     override fun onResume() {
@@ -32,6 +32,22 @@ class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialo
         saveChanges()
     }
 
+    private fun registerObservers() {
+        editViewModel.editDeviceLiveData.observe(this) { responseStatus ->
+            showAddDeviceDialog(responseStatus)
+        }
+
+        editViewModel.editDeviceErrorLiveData.observe(this) { error ->
+            showErrorToast(error)
+        }
+    }
+    private fun showErrorToast(errorMessage: String?) {
+        Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+    }
+    private fun showAddDeviceDialog(showDialog: Boolean) {
+        val dialog = EditDeviceDialog.newInstance(showDialog)
+        dialog.show(supportFragmentManager, EditDeviceDialog.TAG)
+    }
 
     private fun saveChanges() {
         with(binding) {
@@ -40,16 +56,13 @@ class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialo
 
                     val extras = intent.extras
                     val deviceId = extras?.getString("id")
-                    val deviceType = extras?.getString("Type")
+                    val deviceType = extras?.getString("type")
                     val newDeviceName: String? = inputEditDeviceName.text.toString()
                     val newDeviceUsername: String? = inputEditDeviceUser.text.toString()
                     val newDevicePassword: String? = inputEditDevicePassword.text.toString()
 
-                    lifecycleScope.launch {
-                        val returnBackend = editViewModel.saveDeviceChanges(deviceId, deviceType, newDeviceName, newDeviceUsername, newDevicePassword)
-                        val dialog = EditDeviceDialog.newInstance(returnBackend)
-                        dialog.show(supportFragmentManager, EditDeviceDialog.TAG)
-                    }
+                    editViewModel.saveDeviceChanges(deviceId, deviceType, newDeviceName, newDeviceUsername, newDevicePassword)
+
                     true
                 } else {
                     false
@@ -63,20 +76,31 @@ class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialo
         with(binding) {
 
             val extras = intent.extras
-            val rastreability = extras?.getString("Rastreability")
+            val name = extras?.getString("name")
+            val rastreability = extras?.getString("rastreability")
+            val password = extras?.getString("password")
 
-            when (extras?.getString("Type")) {
+            editDeviceName.visibility = View.VISIBLE
+            editDevicePassword.visibility = View.VISIBLE
+
+            inputEditDeviceName.setText(name)
+            inputEditDevicePassword.setText(password)
+
+            when (extras?.getString("type")) {
                 (DeviceType.ALARM.type) -> {
-                    inputEditDeviceMacAddress.setText(rastreability)
                     inputEditDeviceMacAddress.isEnabled = false
-                    inputEditDeviceSerialNumber.visibility = View.GONE
-                    inputEditDeviceUser.visibility = View.GONE
+                    editDeviceMacAddress.visibility = View.VISIBLE
+
+                    inputEditDeviceMacAddress.setText(rastreability)
                 }
 
                 (DeviceType.VIDEO.type) -> {
-                    inputEditDeviceSerialNumber.setText(rastreability)
                     inputEditDeviceSerialNumber.isEnabled = false
-                    inputEditDeviceMacAddress.visibility = View.GONE
+                    editDeviceSerialNumber.visibility = View.VISIBLE
+                    editDeviceUser.visibility = View.VISIBLE
+
+                    inputEditDeviceUser.setText(extras?.getString("username"))
+                    inputEditDeviceSerialNumber.setText(rastreability)
                 }
             }
         }

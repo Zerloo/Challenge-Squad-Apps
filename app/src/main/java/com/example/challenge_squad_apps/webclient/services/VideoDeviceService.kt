@@ -20,10 +20,10 @@ interface VideoDeviceService {
     fun videoDeviceService(): Single<Response<ResponseBody>>
 
     @PATCH("video-devices/{id}")
-    suspend fun patchVideoDevice(
+    fun patchVideoDevice(
         @Path("id") id: String,
-        @Body device: String
-    ): Response<ResponseBody>
+        @Body device: EditDevice
+    ): Single<Response<ResponseBody>>
 
     @POST("video-devices")
     fun postVideoDevice(
@@ -31,6 +31,6 @@ interface VideoDeviceService {
     ): Single<Response<ResponseBody>>
 
     @DELETE("video-devices/{id}")
-    suspend fun deleteVideoDeviceService(@Path("id") id: String): Response<ResponseBody>
+    fun deleteVideoDeviceService(@Path("id") id: String): Single<Response<ResponseBody>>
 }
 

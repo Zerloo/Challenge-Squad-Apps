@@ -20,7 +20,6 @@ class AddDeviceViewModel : ViewModel() {
     private var _addDeviceLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val addDeviceLiveData = _addDeviceLiveData
 
-
     @SuppressLint("CheckResult")
     fun addDevice(deviceType: String, name: String, serialNumber: String?, user: String?, macAddress: String?, password: String) {
         if (deviceType == DeviceType.ALARME.type) {

@@ -2,7 +2,6 @@ package com.example.challenge_squad_apps.ui.activities.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.challenge_squad_apps.database.AppDataBase
@@ -18,12 +17,17 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class MainViewModel : ViewModel() {
 
     private val webClient by lazy { WebClient() }
-    var deviceList: MutableList<Device> = mutableListOf()
-        private set
     private lateinit var favoritesDao: FavoritesDao
     private lateinit var dataBase: AppDataBase
+
     private val _deviceListLiveData = MutableLiveData<MutableList<Device>>()
     val deviceListLiveData = _deviceListLiveData
+
+    private val _filteredDeviceListLiveData = MutableLiveData<MutableList<Device>>()
+    val filteredDeviceListLiveData = _filteredDeviceListLiveData
+
+    private val _deleteDeviceLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val deleteDeviceLiveData = _deleteDeviceLiveData
 
 
     fun roomInstance(applicationContext: Context) {
@@ -34,7 +38,6 @@ class MainViewModel : ViewModel() {
     @SuppressLint("CheckResult")
     fun updateDeviceList() {
         val deviceList: MutableList<Device> = mutableListOf()
-
         webClient.getAlarm()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -68,25 +71,27 @@ class MainViewModel : ViewModel() {
                 _deviceListLiveData.value = deviceList
             }
     }
+    fun getDeviceList (){
+        _filteredDeviceListLiveData.value = _deviceListLiveData.value
+    }
 
-
-    fun getFavorites(): MutableList<Device> {
+    fun getFavorites() {
         val favorites = favoritesDao.getFavoriteDeviceList()
         val devicesFavoriteList = mutableListOf<Device>()
 
         favorites.forEach { favorite ->
-            deviceList.find { it.id == favorite.id }?.let { devicesFavoriteList.add(it) }
+            _deviceListLiveData.value?.find { it.id == favorite.id }?.let { devicesFavoriteList.add(it) }
         }
 
-        return devicesFavoriteList
+        _filteredDeviceListLiveData.value = devicesFavoriteList
     }
 
-    fun getVideoDevices(): MutableList<Device> {
-        return deviceList.filterIsInstance<VideoDevice>().toMutableList()
+    fun getVideoDevices() {
+        _filteredDeviceListLiveData.value = _deviceListLiveData.value?.filterIsInstance<VideoDevice>()?.toMutableList()
     }
 
-    fun getAlarmDevices(): MutableList<Device> {
-        return deviceList.filterIsInstance<AlarmDevice>().toMutableList()
+    fun getAlarmDevices() {
+        _filteredDeviceListLiveData.value =_deviceListLiveData.value?.filterIsInstance<AlarmDevice>()?.toMutableList()
     }
 
     fun deleteFavorite(deviceId: String): Boolean {
@@ -97,15 +102,26 @@ class MainViewModel : ViewModel() {
         return favoritesDao.saveFavoriteDevice(Favorites(deviceId))
     }
 
-    fun searchDevice(s: CharSequence): MutableList<Device> {
-        return deviceList.filter { device -> device.name.contains(s, ignoreCase = true) }.toMutableList()
+    fun searchDevice(s: CharSequence) {
+        _filteredDeviceListLiveData.value = _deviceListLiveData.value?.filter { device -> device.name.contains(s, ignoreCase = true) }?.toMutableList()
     }
 
-    suspend fun confirmButtonClicked(device: Device): Boolean {
-        return if (device is AlarmDevice) {
+    @SuppressLint("CheckResult")
+    fun confirmButtonClicked(device: Device) {
+        if (device is AlarmDevice) {
             webClient.deleteAlarm(device.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { response ->
+                    _deleteDeviceLiveData.value = response
+                }
         } else {
             webClient.deleteVideo(device.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { response ->
+                    _deleteDeviceLiveData.value = response
+                }
         }
     }
 

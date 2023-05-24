@@ -41,6 +41,6 @@ class DeleteDeviceDialog(private val device: Device) : AppCompatDialogFragment()
     }
 
     interface DeleteDeviceDialogListener {
-        suspend fun confirmButtonClicked(device: Device)
+        fun confirmButtonClicked(device: Device)
     }
 }
