@@ -34,12 +34,15 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
     }
 
     private fun registerObservers() {
-        addViewModel.addDeviceLiveData.observe(this) { responseStatus ->
-            showAddDeviceDialog(responseStatus)
+        addViewModel.addDeviceLiveData.observe(this) { backendResponse ->
+            showAddDeviceDialog(backendResponse)
+        }
+        addViewModel.addDeviceErrorLiveData.observe(this) { backendResponse ->
+            showAddDeviceDialog(backendResponse)
         }
     }
-    private fun showAddDeviceDialog(showDialog: Boolean){
-        val dialog = AddDeviceDialog.newInstance(showDialog)
+    private fun showAddDeviceDialog(backendResponse: Int){
+        val dialog = AddDeviceDialog.newInstance(backendResponse)
         dialog.show(supportFragmentManager, AddDeviceDialog.TAG)
     }
 

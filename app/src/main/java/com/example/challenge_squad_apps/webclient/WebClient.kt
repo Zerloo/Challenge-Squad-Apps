@@ -5,8 +5,7 @@ import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.EditDevice
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.ResponseBody
@@ -88,7 +87,8 @@ class WebClient {
         val response = RetrofitInitialization(Constants.TOKEN).videoDeviceService.patchVideoDevice(id = id, device = editedDevice)
         return response
             .map { response ->
-                response.isSuccessful }
+                response.isSuccessful
+            }
     }
 
     fun editAlarm(id: String, newDeviceName: String?, newDevicePassword: String?): Single<Boolean> {
@@ -103,7 +103,7 @@ class WebClient {
             .map { response -> response.isSuccessful }
     }
 
-    fun addDevice(device: Device): Single<Boolean> {
+    fun addDevice(device: Device): Single<Int> {
         lateinit var response: Single<Response<ResponseBody>>
 
         if (device is VideoDevice) {
@@ -111,9 +111,8 @@ class WebClient {
         } else if (device is AlarmDevice) {
             response = RetrofitInitialization(Constants.TOKEN).alarmDeviceService.postAlarmDevice(device)
         }
-
         return response
-            .map { response -> response.isSuccessful }
+            .map { response -> response.code() }
     }
 }
 

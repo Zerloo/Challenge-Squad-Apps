@@ -138,17 +138,21 @@
                 android:layout_marginTop="16dp"
                 android:hint="@string/add_device_password"
                 android:visibility="gone"
-                app:passwordToggleDrawable="@drawable/password_icon_state"
-                app:passwordToggleEnabled="true"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_device_user">
+                app:layout_constraintTop_toBottomOf="@id/add_device_user"
+                app:passwordToggleDrawable="@drawable/password_icon_state"
+                app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_add_device_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+                    android:digits="1234567890"
+                    android:imeOptions="actionSend"
+                    android:inputType="numberPassword"
+                    android:maxLength="5" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

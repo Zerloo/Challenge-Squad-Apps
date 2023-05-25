@@ -3,7 +3,6 @@ package com.example.challenge_squad_apps.ui.activities.main
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore.Video
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -101,8 +100,8 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
             updateRecyclerView(deviceList)
         }
 
-        mainViewModel.deleteDeviceLiveData.observe(this) { responseStatus ->
-            showDeleteDeviceToast(responseStatus)
+        mainViewModel.deleteDeviceLiveData.observe(this) { backendResponse ->
+            showDeleteDeviceToast(backendResponse)
         }
 
         mainViewModel.filteredDeviceListLiveData.observe(this) { deviceList ->
@@ -242,8 +241,8 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
         mainViewModel.confirmButtonClicked(device)
     }
 
-    private fun showDeleteDeviceToast(responseStatus: Boolean) {
-        if (responseStatus) {
+    private fun showDeleteDeviceToast(backendResponse: Boolean) {
+        if (backendResponse) {
             Toast.makeText(this@MainActivity, "Dispositivo removido!", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Falha ao remover dispositivo!", Toast.LENGTH_SHORT).show()

@@ -33,19 +33,19 @@ class EditDeviceActivity : AppCompatActivity(), EditDeviceDialog.EditDeviceDialo
     }
 
     private fun registerObservers() {
-        editViewModel.editDeviceLiveData.observe(this) { responseStatus ->
-            showAddDeviceDialog(responseStatus)
+        editViewModel.editDeviceLiveData.observe(this) { backendResponse ->
+            showAddDeviceDialog(backendResponse)
         }
 
         editViewModel.editDeviceErrorLiveData.observe(this) { error ->
-            showErrorToast(error)
+            showError(error)
         }
     }
-    private fun showErrorToast(errorMessage: String?) {
+    private fun showError(errorMessage: String?) {
         Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
     }
-    private fun showAddDeviceDialog(showDialog: Boolean) {
-        val dialog = EditDeviceDialog.newInstance(showDialog)
+    private fun showAddDeviceDialog(backendResponse: Boolean) {
+        val dialog = EditDeviceDialog.newInstance(backendResponse)
         dialog.show(supportFragmentManager, EditDeviceDialog.TAG)
     }
 

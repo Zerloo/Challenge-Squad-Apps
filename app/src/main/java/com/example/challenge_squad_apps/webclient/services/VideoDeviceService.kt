@@ -3,6 +3,7 @@ package com.example.challenge_squad_apps.webclient.services
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.EditDevice
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import okhttp3.ResponseBody
 import retrofit2.Response

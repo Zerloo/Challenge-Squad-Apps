@@ -4,9 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.example.challenge_squad_apps.R
+import com.example.challenge_squad_apps.webclient.exceptions.HttpResponse
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class AddDeviceDialog(private val returnBackend: Boolean) : AppCompatDialogFragment() {
+class AddDeviceDialog(private val backendResponse: Int) : AppCompatDialogFragment() {
 
     private val listener: AddDeviceDialogListener by lazy {
         activity as AddDeviceDialogListener
@@ -14,23 +15,27 @@ class AddDeviceDialog(private val returnBackend: Boolean) : AppCompatDialogFragm
 
     companion object {
         const val TAG = "AddDeviceDialog"
-        fun newInstance(returnBackend: Boolean) = AddDeviceDialog(returnBackend)
+        fun newInstance(backendResponse: Int) = AddDeviceDialog(backendResponse)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let { activity ->
             isCancelable = false
 
-            val message: String = if (returnBackend) {
-                getString(R.string.dialog_dispositivo_cadastrado_com_sucesso)
-            } else {
-                getString(R.string.dialog_falha_ao_cadastrar_informacoes_do_dispositivo)
+            val message: String = when (backendResponse) {
+                HttpResponse.fromCode(backendResponse)!!.code -> getString(HttpResponse.fromCode(backendResponse)!!.message)
+                else -> {
+                    getString(R.string.dialog_falha_ao_cadastrar_informacoes_do_dispositivo)
+                }
             }
+
+            val title = if (backendResponse == HttpResponse.HTTP_201_CREATED.code) "Dispositivo adicionado" else ("Falha ao adicionar dispositivo")
 
             MaterialAlertDialogBuilder(activity)
                 .setMessage(message)
+                .setTitle(title)
                 .setPositiveButton(R.string.dialog_ok) { _, _ ->
-                    listener.confirmButtonClicked()
+                    if (message == getString(R.string.HTTP_201_CREATED)) listener.confirmButtonClicked()
                     dismiss()
                 }
                 .create()

@@ -123,7 +123,10 @@
                     android:id="@+id/input_edit_device_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
+                    android:digits="1234567890"
+                    android:imeOptions="actionSend"
+                    android:inputType="numberPassword"
+                    android:maxLength="5"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import com.example.challenge_squad_apps.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class EditDeviceDialog(private val returnBackend: Boolean) : AppCompatDialogFragment() {
+class EditDeviceDialog(private val backendResponse: Boolean) : AppCompatDialogFragment() {
 
     private val listener: EditDeviceDialogListener by lazy {
         activity as EditDeviceDialogListener
@@ -14,14 +14,14 @@ class EditDeviceDialog(private val returnBackend: Boolean) : AppCompatDialogFrag
 
     companion object {
         const val TAG = "EditDeviceDialog"
-        fun newInstance(returnBackend: Boolean) = EditDeviceDialog(returnBackend)
+        fun newInstance(backendResponse: Boolean) = EditDeviceDialog(backendResponse)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let { activity ->
             isCancelable = false
 
-            val message: String = if (returnBackend) {
+            val message: String = if (backendResponse) {
                 getString(R.string.dialog_dispositivo_editado_com_sucesso)
             } else {
                 getString(R.string.dialog_falha_ao_atualizar_informacoes_do_dispositivo)

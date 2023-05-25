@@ -41,15 +41,25 @@
     <string name="edit_device_mac_address">Mac Address</string>
 
 
-    <!--    Dialog-->
+    <!--Dialog-->
     <string name="dialog_confirmar">Confirmar</string>
     <string name="dialog_cancelar">Cancelar</string>
     <string name="dialog_ok">Ok</string>
-    <string name="dialog_dispositivo_editado_com_sucesso">Dispositivo editado com sucesso</string>
-    <string name="dialog_falha_ao_atualizar_informacoes_do_dispositivo">Falha ao atualizar informações do dispositivo</string>
+    <string name="dialog_dispositivo_editado_com_sucesso">Dispositivo editado com sucesso.</string>
+    <string name="dialog_falha_ao_atualizar_informacoes_do_dispositivo">Falha ao atualizar informações do dispositivo.</string>
     <string name="dialog_remover_dispositivo">Remover dispositivo?</string>
     <string name="dialog_voce_tem_certeza_que_deseja_remover_este_dispositivo">Você tem certeza que deseja remover este dispositivo?</string>
-    <string name="dialog_dispositivo_cadastrado_com_sucesso">Dispositivo cadastrado com sucesso</string>
-    <string name="dialog_falha_ao_cadastrar_informacoes_do_dispositivo">Falha ao cadastrar informações do dispositivo</string>
+    <string name="dialog_falha_ao_cadastrar_informacoes_do_dispositivo">Falha ao cadastrar informações do dispositivo.</string>
+
+    <!--HTTP Error-->
+    <string name="HTTP_200_OK">Informações atualizadas com sucesso.</string>
+    <string name="HTTP_201_CREATED">Dispositivo cadastrado com sucesso.</string>
+    <string name="HTTP_400_BAD_REQUEST">A requisição não pôde ser atendida pelo servidor. \nVerifique as informações inseridas e tente novamente.</string>
+    <string name="HTTP_401_UNAUTHORIZED">Acesso negado. A autenticação é necessária e falhou ou não foi fornecida. \nVerifique suas credenciais e tente novamente.</string>
+    <string name="HTTP_403_FORBIDDEN">Acesso negado. Você não tem permissão para acessar o recurso solicitado. \nVerifique suas permissões de acesso.</string>
+    <string name="HTTP_404_NOT_FOUND">O recurso solicitado não pôde ser encontrado no servidor. \nVerifique a URL digitada e tente novamente.</string>
+    <string name="HTTP_409_CONFLICT">Número de série ou Mac Address informado já cadastrado. \nPara realizar alterações em um dispositivo existente, utilizar a função \"Editar dispositivo\".</string>
+    <string name="HTTP_500_INTERNAL_SERVER_ERROR">O servidor encontrou uma condição inesperada que o impediu de atender à solicitação. \nTente novamente mais tarde.</string>
+    <string name="HTTP_503_SERVICE_UNVAILABLE">O servidor não está disponível no momento. \nIsso pode ocorrer devido a sobrecarga do servidor ou manutenção em andamento. \nTente novamente mais tarde.</string>
 
 </resources>
