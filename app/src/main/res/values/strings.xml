@@ -62,4 +62,7 @@
     <string name="HTTP_500_INTERNAL_SERVER_ERROR">O servidor encontrou uma condição inesperada que o impediu de atender à solicitação. \nTente novamente mais tarde.</string>
     <string name="HTTP_503_SERVICE_UNVAILABLE">O servidor não está disponível no momento. \nIsso pode ocorrer devido a sobrecarga do servidor ou manutenção em andamento. \nTente novamente mais tarde.</string>
 
+    <!-- Toast -->
+    <string name="falha_ao_remover_dispositivo">Falha ao remover dispositivo</string>
+    <string name="dispositivo_removido">Dispositivo removido!</string>
 </resources>

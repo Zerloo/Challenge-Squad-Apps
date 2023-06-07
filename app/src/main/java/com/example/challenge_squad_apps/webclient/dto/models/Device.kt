@@ -1,5 +1,6 @@
 package com.example.challenge_squad_apps.webclient.dto.models
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -12,4 +13,4 @@ abstract class Device(
     open var name: String,
     @Transient
     open var password: String,
-)
+) : Parcelable

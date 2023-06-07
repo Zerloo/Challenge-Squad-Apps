@@ -1,12 +1,15 @@
 package com.example.challenge_squad_apps.ui.activities.main
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
@@ -22,12 +25,18 @@ import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDialog.DeleteDeviceDialogListener {
-
 
     private lateinit var binding: MainActivityBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var mainDeviceListAdapter: MainDeviceListAdapter
+    private val addDeviceActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val device = result.data?.getParcelableExtra<Device>("device")
+            mainViewModel.addDeviceToList(device!!)
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +55,7 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
     override fun onResume() {
         super.onResume()
         binding.fab.isClickable = true
-        mainViewModel.updateDeviceList()
+//        mainViewModel.updateDeviceList()
     }
 
 
@@ -69,7 +78,7 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
             setOnClickListener {
                 isClickable = false
                 val intent = Intent(this@MainActivity, AddDeviceActivity::class.java)
-                startActivity(intent)
+                addDeviceActivityLauncher.launch(intent)
             }
         }
     }
@@ -100,8 +109,18 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
             updateRecyclerView(deviceList)
         }
 
-        mainViewModel.deleteDeviceLiveData.observe(this) { backendResponse ->
-            showDeleteDeviceToast(backendResponse)
+        mainViewModel.deviceListErrorLiveData.observe(this) { errorMessage ->
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        mainViewModel.deleteDeviceLiveData.observe(this) { success ->
+            showDeleteDeviceToast(success, null)
+            mainViewModel.updateDeviceList()
+
+        }
+
+        mainViewModel.deleteDeviceErrorLiveData.observe(this) { errorMessage ->
+            showDeleteDeviceToast(false, errorMessage)
         }
 
         mainViewModel.filteredDeviceListLiveData.observe(this) { deviceList ->
@@ -241,11 +260,11 @@ class MainActivity : AppCompatActivity(), MainDeviceListListener, DeleteDeviceDi
         mainViewModel.confirmButtonClicked(device)
     }
 
-    private fun showDeleteDeviceToast(backendResponse: Boolean) {
-        if (backendResponse) {
-            Toast.makeText(this@MainActivity, "Dispositivo removido!", Toast.LENGTH_SHORT).show()
+    private fun showDeleteDeviceToast(success: Boolean, errorMessage: String?) {
+        if (success) {
+            Toast.makeText(this, R.string.dispositivo_removido, Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Falha ao remover dispositivo!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }

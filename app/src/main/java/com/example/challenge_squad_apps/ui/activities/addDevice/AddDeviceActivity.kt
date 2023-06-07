@@ -1,5 +1,8 @@
 package com.example.challenge_squad_apps.ui.activities.addDevice
 
+import android.app.Activity
+import android.bluetooth.BluetoothClass.Device
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -10,11 +13,13 @@ import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.databinding.AddDeviceBinding
 import com.example.challenge_squad_apps.ui.utils.dialogs.AddDeviceDialog
 import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
+import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
 
 class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogListener {
 
     private lateinit var binding: AddDeviceBinding
     private lateinit var addViewModel: AddDeviceViewModel
+    private lateinit var deviceAddReturn: com.example.challenge_squad_apps.webclient.dto.models.Device
     private var deviceType = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +40,15 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
 
     private fun registerObservers() {
         addViewModel.addDeviceLiveData.observe(this) { backendResponse ->
-            showAddDeviceDialog(backendResponse)
+            deviceAddReturn = backendResponse
+            showAddDeviceDialog(201)
         }
         addViewModel.addDeviceErrorLiveData.observe(this) { backendResponse ->
             showAddDeviceDialog(backendResponse)
         }
     }
-    private fun showAddDeviceDialog(backendResponse: Int){
+
+    private fun showAddDeviceDialog(backendResponse: Int) {
         val dialog = AddDeviceDialog.newInstance(backendResponse)
         dialog.show(supportFragmentManager, AddDeviceDialog.TAG)
     }
@@ -52,17 +59,22 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
             addDeviceTopAppBar.setNavigationOnClickListener {
                 finish()
             }
+
             addDeviceTopAppBar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.save_menu -> {
-
-                        val name = inputAddDeviceName.text.toString()
-                        val serialNumber: String? = inputAddDeviceSerialNumber.text.toString()
-                        val user: String? = inputAddDeviceUser.text.toString()
-                        val macAddress: String? = inputAddDeviceMacAddress.text.toString()
-                        val password = inputAddDevicePassword.text.toString()
-                        addViewModel.addDevice(deviceType, name, serialNumber, user, macAddress, password)
-
+                        if (deviceType == DeviceType.ALARME.type) {
+                            val name = inputAddDeviceName.text.toString()
+                            val macAddress: String = inputAddDeviceMacAddress.text.toString()
+                            val password = inputAddDevicePassword.text.toString()
+                            addViewModel.addAlarmDevice(name, macAddress, password)
+                        } else {
+                            val name = inputAddDeviceName.text.toString()
+                            val serialNumber: String = inputAddDeviceSerialNumber.text.toString()
+                            val user: String = inputAddDeviceUser.text.toString()
+                            val password = inputAddDevicePassword.text.toString()
+                            addViewModel.addVideoDevice(name, serialNumber, user, password)
+                        }
                         true
                     }
 
@@ -132,7 +144,9 @@ class AddDeviceActivity : AppCompatActivity(), AddDeviceDialog.AddDeviceDialogLi
     }
 
     override fun confirmButtonClicked() {
+        val resultIntent = Intent()
+        resultIntent.putExtra("device", deviceAddReturn)
+        setResult(Activity.RESULT_OK, resultIntent)
         this@AddDeviceActivity.finish()
     }
-
 }

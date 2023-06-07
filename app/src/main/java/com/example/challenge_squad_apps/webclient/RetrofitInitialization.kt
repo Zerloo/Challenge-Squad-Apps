@@ -6,6 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,4 +35,5 @@ class RetrofitInitialization(token: String) {
 
     val videoDeviceService: VideoDeviceService = retrofit.create(VideoDeviceService::class.java)
     val alarmDeviceService: AlarmDeviceService = retrofit.create(AlarmDeviceService::class.java)
+
 }

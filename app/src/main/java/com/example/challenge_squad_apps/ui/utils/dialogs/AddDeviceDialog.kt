@@ -23,19 +23,23 @@ class AddDeviceDialog(private val backendResponse: Int) : AppCompatDialogFragmen
             isCancelable = false
 
             val message: String = when (backendResponse) {
-                HttpResponse.fromCode(backendResponse)!!.code -> getString(HttpResponse.fromCode(backendResponse)!!.message)
+                HttpResponse.fromCode(backendResponse)!!.code -> HttpResponse.fromCode(backendResponse)!!.message
                 else -> {
                     getString(R.string.dialog_falha_ao_cadastrar_informacoes_do_dispositivo)
                 }
             }
 
-            val title = if (backendResponse == HttpResponse.HTTP_201_CREATED.code) "Dispositivo adicionado" else ("Falha ao adicionar dispositivo")
+            val title = if (backendResponse == HttpResponse.HTTP_201_CREATED.code) {
+                "Dispositivo adicionado"
+            } else {
+                "Falha ao adicionar dispositivo"
+            }
 
             MaterialAlertDialogBuilder(activity)
                 .setMessage(message)
                 .setTitle(title)
                 .setPositiveButton(R.string.dialog_ok) { _, _ ->
-                    if (message == getString(R.string.HTTP_201_CREATED)) listener.confirmButtonClicked()
+                    if (backendResponse == HttpResponse.HTTP_201_CREATED.code) listener.confirmButtonClicked()
                     dismiss()
                 }
                 .create()

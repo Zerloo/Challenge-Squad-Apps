@@ -31,5 +31,5 @@ interface AlarmDeviceService {
     ): Single<Response<ResponseBody>>
 
     @DELETE("alarm-centrals/{id}")
-    fun deleteAlarmDeviceService(@Path("id") id: String): Single<Response<ResponseBody>>
+    fun deleteAlarmDeviceService(@Path("id") id: String): Completable
 }

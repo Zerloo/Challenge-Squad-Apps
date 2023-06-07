@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.challenge_squad_apps.ChallengeSquadAppsApplication
+import com.example.challenge_squad_apps.R
 import com.example.challenge_squad_apps.database.AppDataBase
 import com.example.challenge_squad_apps.database.Favorites
 import com.example.challenge_squad_apps.database.dao.FavoritesDao
@@ -11,7 +13,10 @@ import com.example.challenge_squad_apps.webclient.WebClient
 import com.example.challenge_squad_apps.webclient.dto.models.AlarmDevice
 import com.example.challenge_squad_apps.webclient.dto.models.Device
 import com.example.challenge_squad_apps.webclient.dto.models.VideoDevice
+import com.example.challenge_squad_apps.webclient.exceptions.ApiException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.exceptions.CompositeException
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class MainViewModel : ViewModel() {
@@ -19,16 +24,22 @@ class MainViewModel : ViewModel() {
     private val webClient by lazy { WebClient() }
     private lateinit var favoritesDao: FavoritesDao
     private lateinit var dataBase: AppDataBase
+    private lateinit var disposable: Disposable
 
     private val _deviceListLiveData = MutableLiveData<MutableList<Device>>()
     val deviceListLiveData = _deviceListLiveData
 
+    private val _deviceListErrorLiveData = MutableLiveData<String>()
+    val deviceListErrorLiveData = _deviceListErrorLiveData
+
     private val _filteredDeviceListLiveData = MutableLiveData<MutableList<Device>>()
     val filteredDeviceListLiveData = _filteredDeviceListLiveData
 
-    private val _deleteDeviceLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val _deleteDeviceLiveData = MutableLiveData<Boolean>()
     val deleteDeviceLiveData = _deleteDeviceLiveData
 
+    private val _deleteDeviceErrorLiveData = MutableLiveData<String>()
+    val deleteDeviceErrorLiveData = _deleteDeviceErrorLiveData
 
     fun roomInstance(applicationContext: Context) {
         dataBase = AppDataBase.instance(applicationContext)
@@ -41,7 +52,7 @@ class MainViewModel : ViewModel() {
         webClient.getAlarm()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { alarmList ->
+            .subscribe({ alarmList ->
                 for (alarmDevice in alarmList) {
                     val device = AlarmDevice(
                         id = alarmDevice.id,
@@ -52,12 +63,15 @@ class MainViewModel : ViewModel() {
                     deviceList.add(device)
                 }
                 _deviceListLiveData.value = deviceList
-            }
+            }, {
+                _deviceListLiveData.value = deviceList
+                _deviceListErrorLiveData.value = it.message
+            })
 
         webClient.getVideo()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { videoList ->
+            .subscribe({ videoList ->
                 for (videoDevice in videoList) {
                     val device = VideoDevice(
                         id = videoDevice.id,
@@ -69,9 +83,20 @@ class MainViewModel : ViewModel() {
                     deviceList.add(device)
                 }
                 _deviceListLiveData.value = deviceList
-            }
+                _deviceListLiveData.value = deviceList
+            }, {
+                _deviceListLiveData.value = deviceList
+                _deviceListErrorLiveData.value = it.message
+            })
     }
-    fun getDeviceList (){
+
+    fun addDeviceToList(device: Device) {
+        val deviceList: MutableList<Device>? = _deviceListLiveData.value
+        deviceList?.add(device)
+        _deviceListLiveData.value = deviceList
+    }
+
+    fun getDeviceList() {
         _filteredDeviceListLiveData.value = _deviceListLiveData.value
     }
 
@@ -91,7 +116,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun getAlarmDevices() {
-        _filteredDeviceListLiveData.value =_deviceListLiveData.value?.filterIsInstance<AlarmDevice>()?.toMutableList()
+        _filteredDeviceListLiveData.value = _deviceListLiveData.value?.filterIsInstance<AlarmDevice>()?.toMutableList()
     }
 
     fun deleteFavorite(deviceId: String): Boolean {
@@ -109,19 +134,37 @@ class MainViewModel : ViewModel() {
     @SuppressLint("CheckResult")
     fun confirmButtonClicked(device: Device) {
         if (device is AlarmDevice) {
-            webClient.deleteAlarm(device.id)
+            disposable = webClient.deleteAlarm(device.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { response ->
-                    _deleteDeviceLiveData.value = response
-                }
+                .subscribe({
+                    disposable?.dispose()
+                    _deleteDeviceLiveData.value = true
+                }, {
+                    disposable?.dispose()
+                    val error = if (it is CompositeException) {
+                        it.exceptions.filterIsInstance<ApiException>()[0].message
+                    } else {
+                        ChallengeSquadAppsApplication.applicationContext().getString(R.string.falha_ao_remover_dispositivo)
+                    }
+                    _deleteDeviceErrorLiveData.value = error
+                })
         } else {
-            webClient.deleteVideo(device.id)
+            disposable = webClient.deleteVideo(device.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { response ->
-                    _deleteDeviceLiveData.value = response
-                }
+                .subscribe({
+                    disposable?.dispose()
+                    _deleteDeviceLiveData.value = true
+                }, {
+                    disposable?.dispose()
+                    val error = if (it is CompositeException) {
+                        it.exceptions.filterIsInstance<ApiException>()[0].message
+                    } else {
+                        ChallengeSquadAppsApplication.applicationContext().getString(R.string.falha_ao_remover_dispositivo)
+                    }
+                    _deleteDeviceErrorLiveData.value = error
+                })
         }
     }
 

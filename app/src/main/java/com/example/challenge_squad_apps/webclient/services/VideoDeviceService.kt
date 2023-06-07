@@ -26,12 +26,12 @@ interface VideoDeviceService {
         @Body device: EditDevice
     ): Single<Response<ResponseBody>>
 
-    @POST("video-devices")
+    @POST("video-devicess")
     fun postVideoDevice(
         @Body device: VideoDevice
     ): Single<Response<ResponseBody>>
 
     @DELETE("video-devices/{id}")
-    fun deleteVideoDeviceService(@Path("id") id: String): Single<Response<ResponseBody>>
+    fun deleteVideoDeviceService(@Path("id") id: String): Completable
 }
 

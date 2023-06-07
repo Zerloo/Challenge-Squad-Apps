@@ -8,7 +8,6 @@ import com.example.challenge_squad_apps.ui.utils.enums.DeviceType
 
 class InfoDeviceActivity : AppCompatActivity() {
 
-
     private lateinit var binding: InfoDeviceBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
